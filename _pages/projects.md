@@ -1,8 +1,6 @@
 ---
 layout: home
-title: Projects
+lang: jp
+title: プロジェクト
 permalink: /projects/
-author_profile: false
 ---
-
-Here are some things I’ve worked on:

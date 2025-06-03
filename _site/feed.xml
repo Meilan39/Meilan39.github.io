@@ -1,11 +1,402 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-28T22:48:24+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Meilan Muto Portfolio</title><subtitle>Personal Portfolio</subtitle><author><name>武藤皐蘭</name><email>muto.meilan@gmail.com</email></author><entry><title type="html">C89 Parser Implementaion in C</title><link href="http://localhost:4000/projects/C89-Parser/" rel="alternate" type="text/html" title="C89 Parser Implementaion in C" /><published>2025-05-28T00:00:00+09:00</published><updated>2025-05-28T00:00:00+09:00</updated><id>http://localhost:4000/projects/C89-Parser</id><content type="html" xml:base="http://localhost:4000/projects/C89-Parser/"><![CDATA[]]></content><author><name>武藤皐蘭</name><email>muto.meilan@gmail.com</email></author><category term="projects" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">General Purpose Numerical Optimization Solver</title><link href="http://localhost:4000/projects/Gpsolve/" rel="alternate" type="text/html" title="General Purpose Numerical Optimization Solver" /><published>2025-05-28T00:00:00+09:00</published><updated>2025-05-28T00:00:00+09:00</updated><id>http://localhost:4000/projects/Gpsolve</id><content type="html" xml:base="http://localhost:4000/projects/Gpsolve/"><![CDATA[]]></content><author><name>武藤皐蘭</name><email>muto.meilan@gmail.com</email></author><category term="projects" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Path Planning Interface for Differential and Holonomic VEX Robots</title><link href="http://localhost:4000/projects/Path-Planner/" rel="alternate" type="text/html" title="Path Planning Interface for Differential and Holonomic VEX Robots" /><published>2025-05-28T00:00:00+09:00</published><updated>2025-05-28T00:00:00+09:00</updated><id>http://localhost:4000/projects/Path-Planner</id><content type="html" xml:base="http://localhost:4000/projects/Path-Planner/"><![CDATA[<h1 id="description">Description</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-06-03T23:27:47+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Meilan Muto Portfolio</title><subtitle>Personal Portfolio</subtitle><author><name>武藤皐蘭</name></author><entry><title type="html">C89 Parser Implementaion in C</title><link href="http://localhost:4000/projects/C89-Parser/" rel="alternate" type="text/html" title="C89 Parser Implementaion in C" /><published>2025-05-28T00:00:00+09:00</published><updated>2025-05-28T00:00:00+09:00</updated><id>http://localhost:4000/projects/C89-Parser</id><content type="html" xml:base="http://localhost:4000/projects/C89-Parser/"><![CDATA[]]></content><author><name>武藤皐蘭</name></author><category term="projects" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">General Purpose Numerical Optimization Solver</title><link href="http://localhost:4000/projects/Gpsolve/" rel="alternate" type="text/html" title="General Purpose Numerical Optimization Solver" /><published>2025-05-28T00:00:00+09:00</published><updated>2025-05-28T00:00:00+09:00</updated><id>http://localhost:4000/projects/Gpsolve</id><content type="html" xml:base="http://localhost:4000/projects/Gpsolve/"><![CDATA[]]></content><author><name>武藤皐蘭</name></author><category term="projects" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Path Planning Interface for Differential and Holonomic VEX Robots</title><link href="http://localhost:4000/projects/Path-Planner/" rel="alternate" type="text/html" title="Path Planning Interface for Differential and Holonomic VEX Robots" /><published>2025-05-28T00:00:00+09:00</published><updated>2025-05-28T00:00:00+09:00</updated><id>http://localhost:4000/projects/Path-Planner</id><content type="html" xml:base="http://localhost:4000/projects/Path-Planner/"><![CDATA[<h1 id="説明">説明</h1>
 
-<h1 id="tools">Tools</h1>
+<p>このプロジェクトでは、差動駆動およびホロノミック <a href="https://www.vexrobotics.com/">Vex</a> ロボットの滑らかな経路生成における <a href="https://en.wikipedia.org/wiki/Cubic_Hermite_spline">Cubic Hermite Spline</a> の応用について詳述します。経路生成は <a href="https://www.desmos.com/">Desmos</a> の使用により簡略化されています。また、本プロジェクトでは、初速度と最終速度、初期加速度と最終加速度、移動距離を与えたときの速度プロファイルを生成する簡単な方法も提案しています。これは高校最終学年の間に取り組んだプロジェクトであり、多くの改善の余地が残されていますが、その一部を本記事で紹介します。</p>
 
-<h1 id="motivation">Motivation</h1>
+<h1 id="リンク">リンク</h1>
 
-<h1 id="design">Design</h1>
+<p><a href="https://github.com/Meilan39/Vex-Library-Public">GitHubリポジトリ</a><br />
+<a href="https://drive.google.com/file/d/1s2wVjT6lOR31UDFTtDkMZKHKzBM_V8rS/view">プレゼンテーション</a></p>
 
-<h1 id="implementation">Implementation</h1>
+<p>開始点・終了点および速度を可視化できる通常のPath Plannerバージョン。</p>
 
-<h1 id="conclusion">Conclusion</h1>]]></content><author><name>武藤皐蘭</name><email>muto.meilan@gmail.com</email></author><category term="projects" /><summary type="html"><![CDATA[Description]]></summary></entry></feed>
+<p><a href="https://www.desmos.com/calculator/zqpztqvvoi">Path Planner</a></p>
+
+<p>開始点・中間点・終了点および速度を可視化できるPath Planner Plusバージョン。Path Planner Plusは、長いまたは複雑な経路で追加の中間点が必要な場合に最適です。</p>
+
+<p><a href="https://www.desmos.com/calculator/dg7kybaxyb">Path Planner Plus</a></p>
+
+<h1 id="使用ツール">使用ツール</h1>
+
+<ul>
+  <li>C++</li>
+  <li>Desmos</li>
+</ul>
+
+<h1 id="動機">動機</h1>
+
+<p>VEX Robotics Competitionでは、「自律制御期間」と呼ばれる時間帯があり、ロボットは事前にプログラムされたルーチンを実行して得点します。多くのチームは、エンコーダ距離や時間ベースのアプローチを用いて、個別の直線経路を連続で実行しています。しかし、この方法では、目的地と現在地の間に障害物がある場合、複数の経路を順に実行する必要があり、非効率で大きな誤差が生じる可能性があります。このプロジェクトの動機は、2点間の連続的かつ柔軟な経路を簡単に生成できるインターフェースを作成することでした。</p>
+
+<h1 id="背景">背景</h1>
+
+<h3 id="三次エルミート補間">三次エルミート補間</h3>
+
+<p>基本的なアイデアは、開始点と終了点、およびそれぞれに対応する「速度」ペアを使用して柔軟な経路を生成することです。開始点と終了点は経路の端点を定義し、「速度」はそれらの向きが経路の曲率に与える影響を示します。「速度」はロボットの実際の速度を意味するのではなく、端点の向きが経路形状に与える「重み」として扱われます。この問題は補間問題であり、ここではエルミートスプライン補間を用いています。エルミートスプラインは、数学的にはよく知られるベジエ曲線と同等とみなすことができますが、開始点と終了点の向きを明示的に定義できる点で、ロボット経路計画においてより適しています。一方、ベジエ曲線では、中間点が物理的意味を持たずに曲率を定義します。</p>
+
+<p>上述のように、エルミートスプラインは以下の4つの情報から生成されます：</p>
+
+<p>$P_0$ ::= 開始点の x-y 座標<br />
+$P_1$ ::= 終了点の x-y 座標<br />
+$P_2$ ::= 開始点の「速度」<br />
+$P_3$ ::= 終了点の「速度」</p>
+
+<p>次に、パラメータ $t \in \mathbf{R}$ に関する一般的な三次多項式とその導関数を考えます。係数 $a, b, c, d \in \mathbf{R^2}$ は2次元ベクトルです。</p>
+
+\[\begin{align*} 
+P(t) &amp;= at^3+bt^2+ct+d \\
+P'(t) &amp;= 3at^2+2bt+c
+\end{align*}\]
+
+<p>関数 $P(t)$ は2次元ベクトル、すなわちx-y座標を出力し、$P(0)$ が開始点、$P(1)$ が終了点になるように定義します。特に、$P(t)$ および $P’(t)$ に 0 および 1 を代入すると次のようになります。</p>
+
+\[\begin{align*}
+P(0) = P_0 &amp;= d\\
+P(1) = P_1 &amp;= a + b + c + d\\
+P'(0) = P_2 &amp;= c\\
+P'(1) = P_3 &amp;= 3a + 2b + c
+\end{align*}\]
+
+<p>これを行列形式で書き直すと：</p>
+
+\[\begin{bmatrix} P_0 \\ P_1 \\ P_2 \\ P_3 \end{bmatrix}
+=
+\begin{bmatrix}
+0 &amp; 0 &amp; 0 &amp; 1 \\
+1 &amp; 1 &amp; 1 &amp; 1 \\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+3 &amp; 2 &amp; 1 &amp; 0
+\end{bmatrix}
+\begin{bmatrix} a \\ b \\ c \\ d \end{bmatrix}\]
+
+<p>この逆行列を使って：</p>
+
+\[\begin{bmatrix}
+0 &amp; 0 &amp; 0 &amp; 1 \\
+1 &amp; 1 &amp; 1 &amp; 1 \\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+3 &amp; 2 &amp; 1 &amp; 0
+\end{bmatrix}^{-1}
+\begin{bmatrix} P_0 \\ P_1 \\ P_2 \\ P_3 \end{bmatrix}
+=
+\begin{bmatrix} a \\ b \\ c \\ d \end{bmatrix}\]
+
+<p>ガウス消去法で逆行列を求めると：</p>
+
+\[\begin{bmatrix} a \\ b \\ c \\ d \end{bmatrix}
+=
+\begin{bmatrix}
+2 &amp; -2 &amp; 1 &amp; 1 \\
+-3 &amp; 3 &amp; -2 &amp; -1 \\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+1 &amp; 0 &amp; 0 &amp; 0
+\end{bmatrix}
+\begin{bmatrix} P_0 \\ P_1 \\ P_2 \\ P_3 \end{bmatrix}\]
+
+<p>したがって、係数に基づいたパラメトリック方程式は次のようになります：</p>
+
+\[\begin{align*}
+P(t) &amp;=
+\begin{bmatrix} t^3 &amp; t^2 &amp; t &amp; 1 \end{bmatrix}
+\begin{bmatrix}
+2 &amp; -2 &amp; 1 &amp; 1 \\
+-3 &amp; 3 &amp; -2 &amp; -1 \\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+1 &amp; 0 &amp; 0 &amp; 0
+\end{bmatrix}
+\begin{bmatrix} P_0 \\ P_1 \\ P_2 \\ P_3 \end{bmatrix} \\
+&amp;= 
+\begin{bmatrix} 
+2t^3-3t^2+1 &amp; -2t^3+3t^2 &amp; t^3-2t^2+t &amp; t^3-t^2 
+\end{bmatrix}
+\begin{bmatrix} P_0 \\ P_1 \\ P_2 \\ P_3 \end{bmatrix} \\
+\end{align*}\]
+
+<p>ゆえに、</p>
+
+\[P(t) = P_0 h_1 + P_1 h_2 + P_2 h_3 + P_3 h_4\]
+
+<p>ここで、</p>
+
+<p>$h_{1}(t) = 2t^3-3t^2+1$<br />
+$h_{2}(t) = -2t^3 + 3t^2$<br />
+$h_{3}(t) = t^3-2t^2+t$<br />
+$h_{4}(t) = t^3-t^2$</p>
+
+<p>$h_{1}(t)$ から $h_{4}(t)$ は「エルミート基底関数」と呼ばれます。</p>
+
+<h3 id="速度プロファイル">速度プロファイル</h3>
+
+<p>実際には、補間関数は各試合前のロボット初期化時間中に離散的にサンプリングされます。サンプリング時には、経路の1次・2次導関数の離散的な近似も計算可能です。この情報は、特に高速移動するロボットが急カーブで転倒しないように速度をスケーリングする際に有用です。</p>
+
+<p>ここでの目標は、直感的なパラメータを柔軟な速度プロファイルに変換できる関数を定義することです。関数は以下の6つのパラメータで定義されます：</p>
+
+<p>$d$ ::= プロファイルの全体距離<br />
+$m$ ::= 最大速度<br />
+$k_1$ ::= 加速定数<br />
+$k_2$ ::= 減速定数<br />
+$s_1$ ::= 初期速度<br />
+$s_2$ ::= 最終速度</p>
+
+<p>これらの6つのパラメータで、比較的自由度の高い速度プロファイルを定義することができます。</p>
+
+<p>まず、シグモイド関数の一般形を定義します。ただし、$a_i, b_i$ は定数です。</p>
+
+\[f(x) = \frac{1}{1 - a_ie^{-b_ix}} \left( a_i &gt; 0, b_i &gt; 0 \right)\]
+
+<p>曲線の「急峻さ」は、指数係数 $b_i$ によって決まるため、</p>
+
+\[b_i = k_1\]
+
+<p>次に、$f(0) = s_1$ となるように、$a_i$ を以下のように導出します。</p>
+
+\[s_1 = f(0) = \frac{1}{1 + a_i}
+\implies a_i = \frac{1}{s_1} - 1\]
+
+<p>同様に、プロファイルの減速側は、反転シグモイド関数で表され、$a_f, b_f$ を定数とします。</p>
+
+\[g(x) = \frac{1}{1 - a_fe^{b_fx}} \left( a_f &gt; 0, b_f &gt; 0 \right)\]
+
+<p>このグラフの $g(0)$ が $x=d$ に一致するよう、右に $d$ だけシフトします。</p>
+
+\[g(x) = \frac{1}{1 - a_fe^{b_f(x-d)}} \left( a_f &gt; 0, b_f &gt; 0 \right)\]
+
+<p>最後に、2つの関数を掛け合わせ、最大速度 $m$ を掛けることで、最終的なプロファイルが得られます。</p>
+
+<p><img src="../assets/2025-5-28-Path-Planner-assets/profile.svg" alt="Velocity Profile" title="プレゼン資料の一部" /></p>
+
+\[mf(x)g(x) = 
+\frac{m}{
+  \{ 1 + ( \frac{m}{s_1} - 1 ) e^{-k_1x} \} 
+  \{ 1 + ( \frac{m}{s_2} - 1 ) e^{k_2(x - d)} \} 
+}\]
+
+<h3 id="ホロノミック制御の詳細">ホロノミック制御の詳細</h3>
+
+<p>ホロノミックドライブとは、理論上すべての方向に移動・同時に回転可能なロボットの駆動機構です。VEXロボティクスでは、シンプルさから「X-drive（クロスドライブ）」が主流です。ただし、高校レベルでは制御が難しいため、その性能は十分には活用されていません。</p>
+
+<p>例として、左スティック入力 $(l_x, l_y)$、右スティック入力 $(r_x, r_y)$ を持つコントローラーを用いた場合：</p>
+
+\[\mathbf{v} = 
+\begin{bmatrix} l_x \\ l_y \end{bmatrix}
+\ \ \ \ 
+\omega = r_x\]
+
+<p>ここで $\mathbf{v}$ は<strong>フィールド基準のロボット速度</strong>を、$\omega$ は角速度を表します。「フィールド基準」とは、ロボットの向きに関係なく、スティックを一定方向に倒すと常にフィールド上でその方向に進むことを意味します。</p>
+
+<p>このような制御方式は、<strong>フィールドセンター方式（field-centric）</strong>と呼ばれます。ロボットの向きを測定するためにはジャイロスコープを使用し、ここではその角度を $\theta$ とします。入力ベクトル $\mathbf{v}$ を $-\theta$ 回転（反時計回り）することで、フィールド基準の入力をロボット基準に変換します：</p>
+
+\[\mathbf{v_{robot}} =
+\begin{bmatrix}
+  \cos(-\theta) &amp; - \sin(-\theta) \\
+  \sin(-\theta) &amp; \cos(-\theta)
+\end{bmatrix}
+\begin{bmatrix} l_x \\ r_x \end{bmatrix}\]
+
+<p>たとえばロボットが90度右を向いているとき、左スティックを前に倒すと、フィールド上では右に動くことになります。これを打ち消すには、入力を90度反時計回りに回転させます。こうすることで、入力方向とフィールド上の進行方向が一致します。</p>
+
+<p>この処理は、「<strong>ワールド座標系の入力をロボット座標系に変換する</strong>」ということでもあります。</p>
+
+<p><img src="../assets/2025-5-28-Path-Planner-assets/xdrive.svg" alt="X-drive" title="プレゼン資料の一部" /></p>
+
+<p>次に、$\mathbf{v}$ を $\mathbf{v_{robot}}$ に置き換え、各ホイールの動作を決定します。X-driveは全方向駆動が可能なため、各ホイールの進行方向に対応する単位ベクトルとの内積をとって回転量を算出します。具体的には次のように定義します：</p>
+
+\[\mathbf{v_{fl}} = \begin{bmatrix} \cos(45) \\ \sin(45) \end{bmatrix} \ \
+\mathbf{v_{fr}} = \begin{bmatrix} \cos(135) \\ \sin(135) \end{bmatrix} \ \
+\mathbf{v_{rl}} = \begin{bmatrix} \cos(135) \\ \sin(135) \end{bmatrix} \ \
+\mathbf{v_{rr}} = \begin{bmatrix} \cos(45) \\ \sin(45) \end{bmatrix} \ \\]
+
+<p>内積は、ベクトル同士の方向の一致度を測るもので、各ホイールの相対速度を決定するのに使えます。角速度 $\omega$ も考慮すると、各ホイールの速度は次のように定まります：</p>
+
+\[\begin{align*}
+v_{fl} &amp;= l_x * \cos(45)\ \ + l_y * \sin(45)\ \ + \omega \\  
+v_{fr} &amp;= l_x * \cos(135) + l_y * \sin(135) - \omega \\    
+v_{rl} &amp;= l_x * \cos(135) + l_y * \sin(135) + \omega \\    
+v_{rr} &amp;= l_x * \cos(45)\ \  + l_y * \sin(45)\ \  - \omega
+\end{align*}\]
+
+<p>その後、これらの値を最大値で割って正規化することで、モーターの出力が1を超えないようにします。これは、内積に基づく相対的な関係を維持する上で非常に重要です。</p>
+
+<p>この実装では、ジャイロスコープとともにオドメトリエンコーダーを用いて、ロボットの自己位置推定を行います。エンコーダーの速度を離散的に積分し、毎回の位置変化を算出します。これらの変位ベクトルはロボット座標系で表されているため、ジャイロスコープ角を用いて回転させることで、フィールド基準の位置を求めます。移動距離も、変位ベクトルの大きさを積分することで計算可能であり、これは経路追従に使用されます。</p>
+
+<h3 id="desmos-ui">Desmos UI</h3>
+
+<p><a href="https://www.desmos.com/calculator/zqpztqvvoi">Path Planner</a><br />
+<a href="https://www.desmos.com/calculator/dg7kybaxyb">Path Planner Plus</a></p>
+
+<p>上記の2つのDesmosグラフは、軌道生成のためのユーザーインターフェースとして機能します。ロボットの初期および最終座標や「速度」を表す点は、画面上でドラッグ可能です。エルミートスプラインの特性に従い、初期および最終の「速度」を長くすればするほど、その角度が経路に与える影響（制御力）が大きくなります。</p>
+
+<p>Path Planner Plusのグラフは、拡張された軌道生成方式のUIとして機能し、2つのエルミートスプラインによる分割補間です。経路に中間点と「速度」を1つ追加することで、中央付近の経路の挙動をより詳細に制御できます。</p>
+
+<h1 id="実装">実装</h1>
+
+<p>以下のコードは、上記理論に基づいた直接的かつ素朴な実装例です。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">/// @brief エルミート補間式にある処理位置（x）を問い、そ地点の姿勢を返す</span>
+  <span class="c1">/// @param path エルミート補間式の定義</span>
+  <span class="c1">/// @param previous 前回の処理位置の姿勢</span>
+  <span class="c1">/// @param x 処理位置（0から１）</span>
+  <span class="c1">/// @return 処理位置（x）のロボット姿勢</span>
+  <span class="n">Pose</span> <span class="nf">CubicHermiteInterpolation</span><span class="p">(</span><span class="n">Path</span> <span class="n">path</span><span class="p">,</span> <span class="n">Pose</span> <span class="n">previous</span><span class="p">,</span> <span class="kt">float</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// エルミート補間多項式の表現</span>
+    <span class="kt">float</span> <span class="n">h1</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">h2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">);</span>
+    <span class="kt">float</span> <span class="n">h3</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">h4</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">);</span>
+    <span class="c1">// エルミート補間定義に従い処理位置（x）の姿勢を導く</span>
+    <span class="n">Pose</span> <span class="n">current</span><span class="p">;</span>
+    <span class="n">current</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">p0</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">h1</span> <span class="o">+</span> <span class="n">path</span><span class="p">.</span><span class="n">p1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">h2</span> <span class="o">+</span> <span class="n">path</span><span class="p">.</span><span class="n">t0</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">h3</span> <span class="o">+</span> <span class="n">path</span><span class="p">.</span><span class="n">t1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">h4</span><span class="p">;</span>
+    <span class="n">current</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">p0</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">h1</span> <span class="o">+</span> <span class="n">path</span><span class="p">.</span><span class="n">p1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">h2</span> <span class="o">+</span> <span class="n">path</span><span class="p">.</span><span class="n">t0</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">h3</span> <span class="o">+</span> <span class="n">path</span><span class="p">.</span><span class="n">t1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">h4</span><span class="p">;</span>
+    <span class="c1">// 姿勢の角度（進行方向）を導出</span>
+    <span class="n">current</span><span class="p">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">Vector</span> <span class="p">{</span><span class="n">current</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">previous</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">current</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">previous</span><span class="p">.</span><span class="n">y</span><span class="p">}.</span><span class="n">getAngle</span><span class="p">();</span> 
+    <span class="k">return</span> <span class="n">current</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>$t$ の値だけがループ内で変化するため、入力行列とパラメータをあらかじめまとめておくことで、各係数の再計算を回避できます：</p>
+
+\[P(t) =
+\begin{bmatrix} t^3 &amp; t^2 &amp; t &amp; 1 \end{bmatrix}
+\begin{bmatrix}
+2P_0 &amp; -2P_1 &amp; 1P_2 &amp; 1P_3 \
+-3P_0 &amp; 3P_1 &amp; -2P_2 &amp; -1P_3 \
+0 &amp; 0 &amp; 1P_1 &amp; 0 \
+1P_0 &amp; 0 &amp; 0 &amp; 0
+\end{bmatrix}\]
+
+<p>ホロノミックドライブでは、「速度」方向とは別に姿勢角を独立して定義することができます。経路の開始を0、終了を1として、途中で向くべき角度のリスト（HolonomicPose）を渡すことで、ロボットの姿勢制御が可能になります。たとえば {0.5, 180} は、経路の中間点（0.5の位置）で180度を向くべきことを意味します。</p>
+
+<p>これらの距離と角度のペアを線形補間し、経路離散化時に滑らかに角度が変化するようにします。以下がそのコードです：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">/// @param dist 特定する処理位置 (0 から 1)</span>
+  <span class="c1">/// @param angle　ロボットの角度</span>
+  <span class="k">struct</span> <span class="nc">HolonomicPose</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">dist</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">angle</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="c1">/// @brief ホロノミック姿勢の std::vector をある処理位置　x で補間。</span>
+  <span class="c1">/// 目的姿勢を提示された経路位置に厳密に達成する為に滑らか且つ徐々に近づいていく必要がある。</span>
+  <span class="c1">/// この関数は提示された処理位置を用いて全ての処理位置のあるべき姿勢を導く役割を果たす。</span>
+  <span class="c1">/// @param orientation ホロノミック姿勢の　std::vector （処理位置０と１の姿勢は必ず定義されている）</span>
+  <span class="c1">/// @param x 処理位置</span>
+  <span class="c1">/// @return 補間値</span>
+  <span class="kt">float</span> <span class="n">InterpolateHolonomicPose</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">HolonomicPose</span><span class="o">&gt;</span> <span class="n">orientation</span><span class="p">,</span> <span class="kt">float</span> <span class="n">x</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="n">orientation</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">//　ホロノミック姿勢が示されているか</span>
+      <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//　イテレータ初期化</span>
+      <span class="c1">//　std::vector から現在の処理位置（x）が入る区間を探る</span>
+      <span class="c1">//　区間の先頭と後尾の角度と処理位置の差を取ることで直線補間を行うことができる</span>
+      <span class="k">while</span> <span class="p">(</span><span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span> <span class="n">s</span><span class="o">++</span><span class="p">;</span> <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="n">orientation</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span> <span class="c1">//　std::vector を探索</span>
+      <span class="kt">float</span> <span class="n">angleError</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="n">angle</span><span class="p">,</span> <span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">angle</span><span class="p">);</span>        <span class="c1">//　区間の最短角度差を求める</span>
+      <span class="kt">float</span> <span class="n">distError</span> <span class="o">=</span> <span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">dist</span> <span class="o">-</span> <span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="n">dist</span><span class="p">;</span>                <span class="c1">//　区間の処理位置の差を求める</span>
+      <span class="n">x</span> <span class="o">-=</span> <span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="n">dist</span><span class="p">;</span>                                                      <span class="c1">//  </span>
+      <span class="k">return</span> <span class="n">bound</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">distError</span><span class="p">)</span> <span class="o">*</span> <span class="n">angleError</span> <span class="o">+</span> <span class="n">orientation</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="n">angle</span> <span class="p">);</span>           <span class="c1">//  直線補間を行う</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="c1">//　ホロノミック姿勢が示されてない場合（ー１）を返す</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>次に、経路を離散化する処理を行います。「明瞭度（clarity）」は、デフォルトで100点に設定されており、経路、速度プロファイル、および姿勢角度をそれぞれサンプリングしてWaypointとして格納します。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">struct</span> <span class="nc">Waypoint</span> <span class="p">{</span>
+      <span class="n">PathType</span> <span class="n">type</span><span class="p">;</span>
+      <span class="kt">float</span> <span class="n">dist</span><span class="p">;</span>
+      <span class="n">Pose</span> <span class="n">heading</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="c1">/// @brief 軌道を生成する関数</span>
+    <span class="c1">/// @param path エルミート補間式の定義</span>
+    <span class="c1">/// @param orientation ホロノミック姿勢の　std::vector </span>
+    <span class="c1">/// @param clarity 明瞭度を示す（一つの経路は100と定められている）</span>
+    <span class="c1">/// @param profile 速度プロフィール</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Waypoint</span><span class="o">&gt;</span> <span class="n">generate</span><span class="p">(</span><span class="n">Path</span> <span class="n">path</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">HolonomicPose</span><span class="o">&gt;</span> <span class="n">orientation</span><span class="p">,</span> <span class="kt">int</span> <span class="n">clarity</span><span class="p">,</span> <span class="n">StaticProfile</span> <span class="n">profile</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">float</span> <span class="n">segment</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">clarity</span><span class="p">;</span> <span class="c1">//　処理位置の一つ一つの区間の長さを導く</span>
+        <span class="kt">float</span> <span class="n">dist</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//　経路の長さを初期化</span>
+        <span class="c1">// 現在姿勢と前回姿勢を宣言</span>
+        <span class="n">Pose</span> <span class="n">previous</span> <span class="p">{</span><span class="n">path</span><span class="p">.</span><span class="n">p0</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">path</span><span class="p">.</span><span class="n">p0</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">path</span><span class="p">.</span><span class="n">t0</span><span class="p">.</span><span class="n">getAngle</span><span class="p">()};</span> <span class="c1">//　点Aの姿勢に設定　</span>
+        <span class="n">Pose</span> <span class="n">current</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="c1">//　初期化</span>
+        <span class="c1">//　軌道となる経由地の配列を作成</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Waypoint</span><span class="o">&gt;</span> <span class="n">waypoints</span><span class="p">;</span>
+        <span class="c1">//　明瞭度の分繰り返される（イテレータは1から始める）</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">clarity</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 現在処理位置を求める</span>
+            <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">segment</span> <span class="o">*</span> <span class="n">i</span><span class="p">;</span>
+            <span class="c1">// 処理位置を元に現在の姿勢を求める</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">CubicHermiteInterpolation</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+            <span class="c1">// 現在と前回の姿勢の差を（previous）に導入</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">previous</span><span class="p">.</span><span class="n">getError</span><span class="p">(</span><span class="n">current</span><span class="p">);</span>
+            <span class="c1">// 現在角度と前回角度の差を比例拡大して逆数を取ります（この値は経路の曲率が高いほど小さくなる）</span>
+            <span class="c1">// 速度プロフィールの現在処理値値を計算（区分的補間の場合、二番目の補間の際　index　が50となっている）</span>
+            <span class="c1">// 上記の値はどちらとも0から1の範囲で、掛け合わせることで現在処理位置での速度を導ける。</span>
+            <span class="kt">float</span> <span class="n">speed</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">autonomous_rotation_scaler</span> <span class="o">*</span> <span class="n">fabs</span><span class="p">(</span><span class="n">previous</span><span class="p">.</span><span class="n">w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">profile</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">index</span><span class="p">));</span>
+            <span class="c1">// 経由地に代入していく</span>
+            <span class="n">Waypoint</span> <span class="n">waypoint</span><span class="p">;</span>
+            <span class="n">waypoint</span><span class="p">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">length</span> <span class="o">+</span> <span class="n">dist</span> <span class="o">+</span> <span class="n">previous</span><span class="p">.</span><span class="n">getVector</span><span class="p">().</span><span class="n">getMagnitude</span><span class="p">();</span> <span class="c1">//　各経由地間の距離の合計</span>
+            <span class="c1">// ロボットを最終的に動かす関数がコントローラの入力を予想している為、アナログスティックの出力の近似</span>
+            <span class="c1">// アナログスティックの出力の模倣は、進行方向と同じ角度の単位ベクトルで、その方向に全速力で進むことを意味する</span>
+            <span class="c1">// 速度にかけることで適切な速度規制を可能とする</span>
+            <span class="n">waypoint</span><span class="p">.</span><span class="n">heading</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">cosf</span><span class="p">(</span><span class="n">previous</span><span class="p">.</span><span class="n">getVector</span><span class="p">().</span><span class="n">getAngle</span><span class="p">()</span> <span class="o">/</span> <span class="n">RadToDeg</span><span class="p">)</span> <span class="o">*</span> <span class="n">speed</span><span class="p">;</span> 
+            <span class="n">waypoint</span><span class="p">.</span><span class="n">heading</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">sinf</span><span class="p">(</span><span class="n">previous</span><span class="p">.</span><span class="n">getVector</span><span class="p">().</span><span class="n">getAngle</span><span class="p">()</span> <span class="o">/</span> <span class="n">RadToDeg</span><span class="p">)</span> <span class="o">*</span> <span class="n">speed</span><span class="p">;</span>
+            <span class="c1">// この処理位置で以前定義した「ホロノミック姿勢補間関数」を呼び出しあるべき角度を保存                </span>
+            <span class="n">waypoint</span><span class="p">.</span><span class="n">heading</span><span class="p">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">InterpolateHolonomicPose</span><span class="p">(</span><span class="n">orientation</span><span class="p">,</span> <span class="n">aIndex</span> <span class="o">+</span> <span class="n">x</span><span class="p">);</span>
+            <span class="n">waypoints</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">waypoint</span><span class="p">);</span><span class="c1">// 経由地を軌道に加える</span>
+            <span class="c1">// 次のループに備える</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">+</span> <span class="n">previous</span><span class="p">.</span><span class="n">getVector</span><span class="p">().</span><span class="n">getMagnitude</span><span class="p">();</span> <span class="c1">// 今回の経由地間を合計距離にたす</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span> <span class="c1">// 今回の姿勢を前回の姿勢に代入</span>
+        <span class="p">}</span>
+        <span class="c1">// 初期姿勢と最終姿勢を定義。ホロノミック姿勢が示されていたら従って代入</span>
+        <span class="k">this</span> <span class="o">-&gt;</span> <span class="n">initialPose</span> <span class="o">=</span> <span class="n">Pose</span> <span class="p">{</span><span class="n">path</span><span class="p">.</span><span class="n">p0</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">path</span><span class="p">.</span><span class="n">p0</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">orientation</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">orientation</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">angle</span><span class="p">};</span>
+        <span class="k">this</span> <span class="o">-&gt;</span>   <span class="n">finalPose</span> <span class="o">=</span> <span class="n">Pose</span> <span class="p">{</span><span class="n">path</span><span class="p">.</span><span class="n">p1</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">path</span><span class="p">.</span><span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">orientation</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">orientation</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">angle</span> <span class="p">};</span>
+        <span class="k">this</span> <span class="o">-&gt;</span>      <span class="n">length</span> <span class="o">=</span> <span class="n">dist</span><span class="p">;</span>    <span class="c1">// 経路の最終的長さは経由地間の距離の合計である</span>
+        <span class="k">this</span> <span class="o">-&gt;</span>      <span class="n">aIndex</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>       <span class="c1">// 区分的補間を行う場合ホロノミック姿勢をつける為</span>
+        <span class="k">this</span> <span class="o">-&gt;</span>       <span class="n">index</span> <span class="o">=</span> <span class="n">clarity</span><span class="p">;</span> <span class="c1">// 区分的補間を行う場合速度プロフィールを継げる為</span>
+        <span class="k">return</span> <span class="n">waypoints</span><span class="p">;</span>              <span class="c1">// 軌道を呼び出し主に返す</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>ホロノミック車台のフィールドセンター方式コードも次に示します。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kt">void</span> <span class="nf">arcadeDrive</span><span class="p">(</span> <span class="n">Vector</span> <span class="n">translation</span><span class="p">,</span> <span class="kt">float</span> <span class="n">w</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// 運転士視点操作の場合得られた横断ベクトルをロボットの角度の分、逆回転</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">fieldCentric</span><span class="p">)</span> <span class="n">translation</span><span class="p">.</span><span class="n">rotate</span><span class="p">(</span> <span class="o">-</span><span class="n">pose</span><span class="p">.</span><span class="n">w</span> <span class="p">);</span>
+      <span class="kt">float</span> <span class="n">fr</span> <span class="o">=</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">FR_component</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">FR_component</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">w</span><span class="p">;</span>
+      <span class="kt">float</span> <span class="n">fl</span> <span class="o">=</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">FL_component</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">FL_component</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">w</span><span class="p">;</span>
+      <span class="kt">float</span> <span class="n">rl</span> <span class="o">=</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">RL_component</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">RL_component</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">w</span><span class="p">;</span>
+      <span class="kt">float</span> <span class="n">rr</span> <span class="o">=</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">RR_component</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span> <span class="n">translation</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">RR_component</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">w</span><span class="p">;</span>
+      <span class="kt">float</span> <span class="n">max</span> <span class="o">=</span> <span class="n">fmax</span><span class="p">(</span> <span class="n">fmax</span><span class="p">(</span> <span class="n">fabs</span><span class="p">(</span><span class="n">fr</span><span class="p">),</span> <span class="n">fabs</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span> <span class="p">),</span> <span class="n">fmax</span><span class="p">(</span> <span class="n">fabs</span><span class="p">(</span><span class="n">rl</span><span class="p">),</span> <span class="n">fabs</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">max</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 正規化</span>
+          <span class="n">fr</span> <span class="o">/=</span> <span class="n">max</span><span class="p">;</span>
+          <span class="n">fl</span> <span class="o">/=</span> <span class="n">max</span><span class="p">;</span>
+          <span class="n">rl</span> <span class="o">/=</span> <span class="n">max</span><span class="p">;</span>
+          <span class="n">rr</span> <span class="o">/=</span> <span class="n">max</span><span class="p">;</span> 
+      <span class="p">}</span>
+      <span class="n">fr</span> <span class="o">*=</span> <span class="n">WHEEL_MAX_RPM</span><span class="p">;</span>  <span class="c1">// 適当な速度を導く</span>
+      <span class="n">fl</span> <span class="o">*=</span> <span class="n">WHEEL_MAX_RPM</span><span class="p">;</span>  <span class="c1">// 適当な速度を導く</span>
+      <span class="n">rl</span> <span class="o">*=</span> <span class="n">WHEEL_MAX_RPM</span><span class="p">;</span>  <span class="c1">// 適当な速度を導く</span>
+      <span class="n">rr</span> <span class="o">*=</span> <span class="n">WHEEL_MAX_RPM</span><span class="p">;</span>  <span class="c1">// 適当な速度を導く</span>
+      <span class="n">FR</span><span class="p">.</span><span class="n">spin</span><span class="p">(</span><span class="n">forward</span><span class="p">,</span> <span class="n">fr</span><span class="p">,</span> <span class="n">vex</span><span class="o">::</span><span class="n">velocityUnits</span><span class="o">::</span><span class="n">rpm</span><span class="p">);</span>  <span class="c1">// モータに速度命令</span>
+      <span class="n">FL</span><span class="p">.</span><span class="n">spin</span><span class="p">(</span><span class="n">forward</span><span class="p">,</span> <span class="n">fl</span><span class="p">,</span> <span class="n">vex</span><span class="o">::</span><span class="n">velocityUnits</span><span class="o">::</span><span class="n">rpm</span><span class="p">);</span>  <span class="c1">// モータに速度命令</span>
+      <span class="n">RL</span><span class="p">.</span><span class="n">spin</span><span class="p">(</span><span class="n">forward</span><span class="p">,</span> <span class="n">rl</span><span class="p">,</span> <span class="n">vex</span><span class="o">::</span><span class="n">velocityUnits</span><span class="o">::</span><span class="n">rpm</span><span class="p">);</span>  <span class="c1">// モータに速度命令</span>
+      <span class="n">RR</span><span class="p">.</span><span class="n">spin</span><span class="p">(</span><span class="n">forward</span><span class="p">,</span> <span class="n">rr</span><span class="p">,</span> <span class="n">vex</span><span class="o">::</span><span class="n">velocityUnits</span><span class="o">::</span><span class="n">rpm</span><span class="p">);</span>  <span class="c1">// モータに速度命令</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最後に、経路を実行するプログラムを次に示す。自己位置推定によって「distanceTraveled」という変数を更新し、軌道の進捗状況を把握し、次の「Waypoint」を受け取る。この「Waypoint」を用いて適切なコントローラ入力を数値的に再現する。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">/// @brief 経路を実行</span>
+    <span class="c1">/// @param trajectory 走る経路</span>
+    <span class="c1">/// @return 実行の捗り (0から1)</span>
+    <span class="kt">float</span> <span class="nf">follow</span><span class="p">(</span><span class="n">HolonomicTrajectory</span> <span class="n">trajectory</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">localize</span><span class="p">();</span> <span class="c1">// 自己位置推定手法を更新</span>
+        <span class="kt">float</span> <span class="n">progress</span> <span class="o">=</span> <span class="n">fitToRange</span><span class="p">(</span> <span class="n">distanceTraveled</span> <span class="o">/</span> <span class="n">trajectory</span><span class="p">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span> <span class="c1">// 実行捗りを求める</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">progress</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">// 実行が終了わってない限り</span>
+            <span class="n">Waypoint</span> <span class="n">waypoint</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">distanceTraveled</span><span class="p">);</span> <span class="c1">// 走った距離を用い経路から次の経由地を特定</span>
+            <span class="c1">//　ホロノミック姿勢の場合、PID制御を用いて目的角度を到達するために適切な出力を導く。</span>
+            <span class="c1">//　概念的には、現在角度と目的角度の最短差を導き、その差が０に近づけるよに出力量を決める</span>
+            <span class="kt">float</span> <span class="n">w</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">.</span><span class="n">orientation</span> <span class="o">?</span> <span class="n">omegaPID</span><span class="p">.</span><span class="n">get</span><span class="p">(</span> <span class="n">wrap</span><span class="p">(</span><span class="n">pose</span><span class="p">.</span><span class="n">w</span><span class="p">,</span> <span class="n">waypoint</span><span class="p">.</span><span class="n">heading</span><span class="p">.</span><span class="n">w</span><span class="p">)</span> <span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">arcadeDrive</span><span class="p">(</span> <span class="n">Vector</span> <span class="p">{</span><span class="n">waypoint</span><span class="p">.</span><span class="n">heading</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">waypoint</span><span class="p">.</span><span class="n">heading</span><span class="p">.</span><span class="n">y</span><span class="p">},</span> <span class="n">w</span> <span class="p">);</span> <span class="c1">// コントローラ操作の関数に入力</span>
+            <span class="k">return</span> <span class="n">progress</span><span class="p">;</span> <span class="c1">//　実行捗りを毎回返す</span>
+        <span class="p">}</span>      
+        <span class="n">stop</span><span class="p">();</span>   <span class="c1">// モータを全て停止</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// 経路が無事実行されたことを再び示す</span>
+    <span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>武藤皐蘭</name></author><category term="projects" /><summary type="html"><![CDATA[説明]]></summary></entry></feed>

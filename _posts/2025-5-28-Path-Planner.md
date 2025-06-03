@@ -2,6 +2,7 @@
 title: "Path Planning Interface for Differential and Holonomic VEX Robots"
 date: 2025-05-28
 categories: projects
+mathjax: true
 ---
 
 # 説明
@@ -171,7 +172,7 @@ $$ g(x) = \frac{1}{1 - a_fe^{b_f(x-d)}} \left( a_f > 0, b_f > 0 \right)$$
 
 最後に、2つの関数を掛け合わせ、最大速度 $m$ を掛けることで、最終的なプロファイルが得られます。
 
-![Velocity Profile](./2025-5-28-Path-Planner-assets/profile.svg "プレゼン資料の一部")
+![Velocity Profile](../assets/2025-5-28-Path-Planner-assets/profile.svg "プレゼン資料の一部")
 
 $$ mf(x)g(x) = 
 \frac{m}{
@@ -210,7 +211,7 @@ $$
 
 この処理は、「**ワールド座標系の入力をロボット座標系に変換する**」ということでもあります。
 
-![X-drive](./2025-5-28-Path-Planner-assets/xdrive.svg "プレゼン資料の一部")
+![X-drive](../assets/2025-5-28-Path-Planner-assets/xdrive.svg "プレゼン資料の一部")
 
 次に、$\mathbf{v}$ を $\mathbf{v_{robot}}$ に置き換え、各ホイールの動作を決定します。X-driveは全方向駆動が可能なため、各ホイールの進行方向に対応する単位ベクトルとの内積をとって回転量を算出します。具体的には次のように定義します：
 

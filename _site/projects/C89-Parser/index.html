@@ -10,8 +10,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>C89 Parser Implementaion in C - Meilan Muto Portfolio</title>
-<meta name="description" content="">
+<!-- begin _includes/seo.html --><title>C89コンパイラのパーサをCで実装 - Meilan Muto Portfolio</title>
+<meta name="description" content="プログラムに携わるエンジニアとしてコンパイラは当然のように使う道具である。ただし、その裏には人間の意思を機械が実行できる指示に変換するための奥深い技術がある。また、コンパイラを勉強することによって、コンパイルエラーの処理能力が強化されたり、その言語の理解度が深まるといった利点が挙げられる。当然のように使う道具への感謝意識を持つことも技術者として大切なように思える。">
 
 
   <meta name="author" content="武藤皐蘭">
@@ -23,11 +23,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Meilan Muto Portfolio">
-<meta property="og:title" content="C89 Parser Implementaion in C">
+<meta property="og:title" content="C89コンパイラのパーサをCで実装">
 <meta property="og:url" content="http://localhost:4000/projects/C89-Parser/">
 
 
-  <meta property="og:description" content="">
+  <meta property="og:description" content="プログラムに携わるエンジニアとしてコンパイラは当然のように使う道具である。ただし、その裏には人間の意思を機械が実行できる指示に変換するための奥深い技術がある。また、コンパイラを勉強することによって、コンパイルエラーの処理能力が強化されたり、その言語の理解度が深まるといった利点が挙げられる。当然のように使う道具への感謝意識を持つことも技術者として大切なように思える。">
 
 
 
@@ -250,8 +250,8 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="C89 Parser Implementaion in C">
-    <meta itemprop="description" content="">
+    <meta itemprop="headline" content="C89コンパイラのパーサをCで実装">
+    <meta itemprop="description" content="プログラムに携わるエンジニアとしてコンパイラは当然のように使う道具である。ただし、その裏には人間の意思を機械が実行できる指示に変換するための奥深い技術がある。また、コンパイラを勉強することによって、コンパイルエラーの処理能力が強化されたり、その言語の理解度が深まるといった利点が挙げられる。当然のように使う道具への感謝意識を持つことも技術者として大切なように思える。">
     <meta itemprop="datePublished" content="2025-05-28T00:00:00+09:00">
     
 
@@ -259,7 +259,7 @@
       
         <header>
           <h1 id="page-title" class="page__title" itemprop="headline">
-            <a href="http://localhost:4000/projects/C89-Parser/" itemprop="url">C89 Parser Implementaion in C
+            <a href="http://localhost:4000/projects/C89-Parser/" itemprop="url">C89コンパイラのパーサをCで実装
 </a>
           </h1>
           
@@ -276,7 +276,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          less than 1 minute read
+          10 minute read
         
       </span>
     
@@ -288,7 +288,938 @@
 
       <section class="page__content" itemprop="text">
         
-        
+        <p>プログラムに携わるエンジニアとしてコンパイラは当然のように使う道具である。ただし、その裏には人間の意思を機械が実行できる指示に変換するための奥深い技術がある。また、コンパイラを勉強することによって、コンパイルエラーの処理能力が強化されたり、その言語の理解度が深まるといった利点が挙げられる。当然のように使う道具への感謝意識を持つことも技術者として大切なように思える。</p>
+
+<p>本記事では、近代の情報技術の著しい発展の基盤となるコンパイラを解明し、C89コンパイラの解析部分の一部をC言語で実装した過程を示す。流れとしては、2章でコンパイラの概要を説明し、3章で重要な補足としてBNF（Backus-Naur form）を説明したのち、4章から6章にかけてコンパイラの解析部分を実際のコードとともに解説し、7章で実際に入力テストを通してパーサーを検証する。</p>
+
+<h1 id="2-コンパイラの概要">2. コンパイラの概要</h1>
+
+<p>コンパイラはその言語の規則に従って書かれた文字列を機械語に変換する、いわば翻訳プログラムである。図1で示すコンパイラの構造は、おおよそ「解析部分」と「変換部分」に分けて考えることができる。コンパイラの解析部分では、入力コードの文字列を解析して意味を抽出する。解析部分に含めている最適化では、抽出された意味をもって最適な形に変換する。最後に変換部分では、抽出かつ最適化された意味から機械語を生成し、リンキング段階でライブラリや関連ファイルを結合させ、実行可能な機械語を出力する。本レポートでは解析部分の字句解析と構文解析の実装について解説する[1]。</p>
+
+<p><img src="/assets/2025-5-28-C89-Parser/figure1.svg" alt="figure1" title="figure1" class="img-large-centered" /></p>
+<div style="text-align: center;"> 図1：コンパイラの構造 </div>
+<p><br />
+ 
+プログラミング言語はあらゆる言語と同様に、字句と文法によって規定される。字句は言語を構成する最小の単位をなし、文法は字句の規則正しい繋がりを共有するルールである。図1の「字句解析」は入力されたコードから、意味をなす最小の単位である、人間言語でいう単語を抽出する役割がある。この際に、余計なスペースや解析不要なコメントなどを読み飛ばす。「構文解析」では抽出した字句の繋がりを文法規定に当てはめ、初めて指示として意味をなす、人間言語でいう「文」として解釈する役割がある。この際に、コードの意味を最簡な形で表す「抽象構文木」を同時に作成する。「意味解析」では、構文解析で生成した抽象構文木を用いて,型検査などの構文を超越して、人間言語における文章レベルで意味の確認を行う[1]。</p>
+
+<p>ここで重要な注意点として、コンパイラを実装する一つ目の難しさは、ユーザーが誤った入力をする可能性である。字句解析の段階では許容される字句から構成されていること、構文解析の段階では許容される文法に当てはまること、を全ての字句と文法ルールについて確認する必要がある。これについては4章と5章で詳しく解説する。</p>
+
+<h1 id="3-bnfbackusnaur-form">3. BNF（Backus–Naur form）</h1>
+<p>コンパイラを実装する二つ目の難しさは文法の複雑さである。そこで、コンピュータ言語の文法記述はBNF（Backus-Naur form）という表記法を用いて表すことにする。BNFには様々な種類や標準があるが、本レポートで扱うBNFは表1の記号からなるものとする。</p>
+
+<div style="text-align: center;"> 表1：本レポートで用いるBNF表記法 </div>
+
+<table>
+  <thead>
+    <tr>
+      <th>記号</th>
+      <th>説明</th>
+      <th>範囲</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>::=</td>
+      <td>左辺を右辺で定義する</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>&lt;&gt;</td>
+      <td>中に名前を入れて変数を表す</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>{}</td>
+      <td>普通の括弧のように使う</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>|</td>
+      <td>どちらかを選択する（OR）</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>前の要素は何回でも繰り返していい</td>
+      <td>“{0, }”</td>
+    </tr>
+    <tr>
+      <td>+</td>
+      <td>前の要素は1回以上の繰り返しを許す</td>
+      <td>“{1, }”</td>
+    </tr>
+    <tr>
+      <td>?</td>
+      <td>前の要素は0か1回の繰り返しを許す</td>
+      <td>“{0, 1}”</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<p>例えば、本レポートで使うC89のBNF [2] はプログラム1のように始まる。プログラム1を読み解くと、「translation-unit」は「external-declaration」を何回でも繰り返したもので定義される。また、「external-declaration」は「function-definition」もしくは「declaration」と定義されている。</p>
+
+<div style="text-align: center;"> プログラム1：C89のBNFの非終端要素の例 [2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;translation-unit&gt; ::= {&lt;external-declaration&gt;}*
+
+&lt;external-declaration&gt; ::= &lt;function-definition&gt;
+                         | &lt;declaration&gt;
+</code></pre></div></div>
+
+<p>プログラム1で示す「translation-unit」と「external-declaration」はいずれも非終端要素を表していると言える。一方でプログラム2で示すような「storage-class-specifier」は字句のみから構成されている。文法は必ず字句に帰着するため、これらの要素は終端要素であることがわかる。</p>
+
+<div style="text-align: center;"> プログラム2：C89のBNFの終端要素の例 [2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;storage-class-specifier&gt; ::= auto
+                            | register
+                            | static
+                            | extern
+                            | typedef
+</code></pre></div></div>
+
+<p>最後にプログラム3で示す「pointer」の定義は自分自身を含んでいることがわかる。このようにBNFを再帰的に記述することによって簡潔に文法を記述することができる。</p>
+
+<div style="text-align: center;"> プログラム3：C89のBNFの再帰例 [2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;pointer&gt; ::= * {&lt;type-qualifier&gt;}* {&lt;pointer&gt;}?
+</code></pre></div></div>
+
+<h1 id="4-字句解析lexical-analysis">4. 字句解析（Lexical Analysis）</h1>
+<h2 id="41-設計">4.1. 設計</h2>
+
+<p>字句解析の目的は人間言語における単語をコードの文字列から抽出することであると説明した。例えば、プログラム4のC言語プログラムは九つのトーケン「int」「x」「=」「3」「,」「y」「=」「4」「;」からなっている。また、意味的には型指定子の「int」、変数名「x」「y」、等式「=」、定数「3」「4」、コンマ「,」、とセミコロン「;」からなっている。</p>
+
+<div style="text-align: center;"> プログラム4：C言語の具体例 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>次に、プログラム4と同値なものをプログラム5で示す。つまり、スペースや改行を考慮する必要はなく、トーケンの順番のみでプログラムの意味が決まる。よって、これらのトーケンを先頭から読み込んではリストに追加していく方針をとる。ただし、プログラム6で示すように、変数名「intvariable」などを先頭から素朴に読み込むと「int」「variable」の様に分割して解釈される。つまり、型指定子などのキーワードに続いて変数名に使用可能な文字があれば、変数名として解釈する必要がある。</p>
+
+<div style="text-align: center;"> プログラム5：スペースや改行が入っても同じ意味で解釈される </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span>      <span class="n">x</span>  <span class="o">=</span> <span class="mi">3</span>     
+<span class="p">,</span><span class="n">y</span> <span class="o">=</span>    <span class="mi">4</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div style="text-align: center;"> プログラム6：型指定子などのトーケン化における性質 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">intvariable</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">intvariable</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>読み込んでいくトーケンは単方向リストとして保管し、各ノードにトーケンの構文的な意味を表す列挙型整数と、トーケンが定数の場合にその型を表す列挙型整数を備える。ここでいうトーケンの構文的な意味とは、BNFに含まれるトーケンを終端要素ごとにまとめたものである。つまり、プログラム7の「struct-or-union」という終端要素をそのままプログラム8の列挙型「l_Types」の要素とする。また、単方向リスト「Token」を構造体で管理した、おおよその構造を図2で示す。</p>
+
+<div style="text-align: center;"> プログラム7：BNFの終端要素「struct-or-union」[2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;struct-or-union&gt; ::= struct
+                    | union
+</code></pre></div></div>
+
+<div style="text-align: center;"> プログラム8：列挙型「l_Types」の要素「struct_or_union」 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">enum</span> <span class="n">l_Types</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="n">struct_or_union</span> <span class="o">=</span> <span class="mi">28</span><span class="p">,</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><img src="/assets/2025-5-28-C89-Parser/figure2.svg" alt="figure2" title="figure2" class="img-large-centered" /></p>
+<div style="text-align: center;"> 図2：構造体「Token」の構成 </div>
+<p><br /></p>
+
+<p>ここで大事な注釈が二つある。一つ目は複数の意味を持つトーケンは単独の列挙型整数を割り当てることで、二つ目はトーケンの読み込みには順序を設ける必要があることである。「<em>」の様なトーケンは掛け算の意味とポインタ指定子の意味を同時に持つため、文脈で判断する必要がある。この判断は構文解析で行うことにして、字句解析の段階では「dot」として識別する。また、プログラム9で示す様に「assignment-operator」は様々な代入演算子を持っているが、例えば「</em>」を先に読み込んでしまうと「<em>=」が「</em>」「=」と解釈されてしまう問題点がある。基本的に「assignment-operator」の様な、より長いトーケンを先に読み込むことによってこの問題を回避できる。</p>
+
+<div style="text-align: center;"> プログラム9：BNFの「assignement-operator」[2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;assignment-operator&gt; ::= =
+                            | *=
+                            | /=
+                            | %=
+                            | +=
+                            | -=
+                            | &lt;&lt;=
+                            | &gt;&gt;=
+                            | &amp;=
+                            | ^=
+                            | |=
+</code></pre></div></div>
+
+<h2 id="42実装">4.2.実装</h2>
+<p>まずmainから実装し、トップダウンにプログラムを作成していく。プログラム10では理想的な字句解析の呼び出しを示している。Mainの標準引数としてコンパイル対象のファイルを受け取り、字句を保管するトーケン構造体を初期化する。字句解析は行ごとに実行し、字句解析がエラーを返したら行を特定して標準出力に返す。これを実現するために、「Token」というリスト構造体と、「lex()」というトーケンリスト及び各行の文字列を引数とした字句解析関数を実装する。</p>
+
+<div style="text-align: center;"> プログラム10：mainの字句解析処理 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="c1">// 入力ファイルの受付</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span><span class="n">printf</span><span class="p">(</span><span class="s">"invalid arguments</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;}</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">file</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">"r"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">file</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">"unable to open file</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span> 
+    <span class="c1">// トーケンの作成</span>
+    <span class="n">Token</span><span class="o">*</span> <span class="n">tokens</span>  <span class="o">=</span> <span class="n">construct</span><span class="p">();</span>
+    <span class="c1">// コードファイルを行ごとに字句解析</span>
+    <span class="kt">int</span> <span class="n">line</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">fgets</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">FILE_LINE_LENGTH</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">line</span><span class="o">++</span><span class="p">;</span>
+        <span class="c1">// ファイルから読み込んだ行の改行文字を終端文字で置き換える</span>
+        <span class="n">buffer</span><span class="p">[</span><span class="n">strcspn</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+        <span class="c1">// 字句解析を行に施して、エラーが返されたら終了した行番号とともに標準出力</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">lex</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">buffer</span><span class="p">))</span> <span class="p">{</span><span class="n">printf</span><span class="p">(</span><span class="s">"lexical error at line %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">line</span><span class="p">);</span> <span class="k">goto</span> <span class="n">E</span><span class="p">;}</span>
+    <span class="p">}</span>
+    <span class="err">\</span><span class="n">vdots</span>
+<span class="nl">E:</span>  <span class="c1">// ファイルを閉じる</span>
+    <span class="n">fclose</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>「Token」は文字列と二つの整数を持つ単方向リストとして実装する。この実装テンプレートをプログラム11で示す。付随する関数として、コンストラクタ「constructor()」、デストラクタ「destructor()」、要素追加「push」、次の要素に進む「next()」、と全要素をプリントする「print()」がある。おおよそ標準的な単方向リストの実装であるが、「push()」と「next()」はメモリ確保の失敗と次の要素が存在しないときにエラー戻り値「-1」を返す。</p>
+
+<div style="text-align: center;"> プログラム11：Tokenのテンプレート </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_Token</span> <span class="p">{</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">type</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">constant_type</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">_Token</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Token</span><span class="p">;</span>
+
+<span class="n">Token</span><span class="o">*</span> <span class="nf">construct</span><span class="p">();</span>
+<span class="n">Token</span><span class="o">*</span> <span class="nf">destruct</span><span class="p">(</span><span class="n">Token</span><span class="o">*</span> <span class="n">head</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">push</span><span class="p">(</span><span class="n">Token</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">constant_type</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">next</span><span class="p">(</span><span class="n">Token</span><span class="o">**</span> <span class="n">curent</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="n">Token</span><span class="o">*</span> <span class="n">head</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>「lex()」関数はプログラム12のように実装する。プログラム10からの入力としてトーケンリスト「this」と文字列「s」が与えられ、whileループを用いて「s」の先頭からトーケンを読み込んでトーケンリストに追加していく。ループする度にまず、余計なスペースやコメントを読み飛ばす。実際の読み込みは三段階「字句参照」「定数参照」「変数参照」に分けて行う。字句参照では、BNFに従って分別したトーケンと比較し、全分別で71行に渡る。定数参照では「0.32341」や「“here”」などの定数を別のファルダ「constant.h」を用いて読み込む。「constant.h」では定数専用のBNFを用いて直接構文解析を行なっているため、5章の構文解析の説明以外のものは省く。最後に、変数参照は字句参照と定数参照に引っ掛からなかったトーケンが変数名として成り立つかどうかを判定する。変数名に許されている小文字、大文字、アンダーバー、から成る塊であれば変数として認識することになる。いずれの段階でも、参照関数は一致すると「1」を返すため、上から最初に一致したものをgoto文を用いて最後の処理に持っていく。最後の処理は抽出したトーケンをトーケンリストに追加することである。</p>
+
+<div style="text-align: center;"> プログラム12：lex()の実装 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">lex</span><span class="p">(</span><span class="n">Token</span><span class="o">*</span> <span class="n">this</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">ps</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">constant_type</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="o">!=</span><span class="sc">'\0'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 余計なスペースを読み飛ばす</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="o">==</span><span class="sc">' '</span><span class="p">)</span> <span class="p">{</span><span class="n">s</span><span class="o">++</span><span class="p">;}</span>
+        <span class="c1">// 初期化</span>
+        <span class="n">ps</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">constant_type</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="c1">// コメントを読み飛ばす</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">l_compare</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="n">l_comment</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="k">break</span><span class="p">;</span>
+        <span class="c1">// 字句参照</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">l_compare</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="n">l_type_specifier</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="p">{</span><span class="n">type</span> <span class="o">=</span> <span class="n">type_specifier</span><span class="p">;</span> <span class="k">goto</span> <span class="n">P</span><span class="p">;}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">l_compare</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="n">l_struct_or_union</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="p">{</span><span class="n">type</span> <span class="o">=</span> <span class="n">struct_or_union</span><span class="p">;</span> <span class="k">goto</span> <span class="n">P</span><span class="p">;}</span>
+<span class="err">　　　　\</span><span class="n">vdots</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">l_compare</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="n">l_exclamation</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span><span class="n">type</span> <span class="o">=</span> <span class="n">exclamation</span><span class="p">;</span> <span class="k">goto</span> <span class="n">P</span><span class="p">;}</span>
+        <span class="c1">// 「constant.h」による定数参照</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">c_constant</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">constant_type</span><span class="p">))</span> <span class="p">{</span><span class="n">type</span> <span class="o">=</span> <span class="n">constant</span><span class="p">;</span> <span class="k">goto</span> <span class="n">P</span><span class="p">;}</span>
+        <span class="c1">// 変数名参照</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">l_user_defined</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">))</span> <span class="p">{</span><span class="n">type</span> <span class="o">=</span> <span class="n">user_defined</span><span class="p">;</span> <span class="k">goto</span> <span class="n">P</span><span class="p">;}</span>
+        <span class="c1">// 字句が参照できなかった</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="c1">// トーケンに要素を追加</span>
+    <span class="nl">P:</span>  <span class="n">strncpy</span><span class="p">(</span><span class="n">l_buffer</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">s</span><span class="o">-</span><span class="n">ps</span><span class="p">);</span>
+        <span class="n">l_buffer</span><span class="p">[</span><span class="n">s</span><span class="o">-</span><span class="n">ps</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+        <span class="n">push</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">l_buffer</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">constant_type</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>「l_compare()」の引数として渡している「l_type_specifier」とその後の数字「9」などはそれぞれ型指定子に属するトーケン文字列の配列とその配列の長さを示している。このトーケン文字列の配列の例をプログラム13で示す。
+ </p>
+<div style="text-align: center;"> プログラム13：トーケン文字列の配列 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="n">l_type_specifier</span><span class="p">[</span><span class="mi">9</span><span class="p">][</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">"void"</span><span class="p">,</span> <span class="s">"char"</span><span class="p">,</span> <span class="s">"short"</span><span class="p">,</span> <span class="s">"int"</span><span class="p">,</span> <span class="s">"long"</span><span class="p">,</span> <span class="s">"float"</span><span class="p">,</span> <span class="s">"double"</span><span class="p">,</span> <span class="s">"signed"</span><span class="p">,</span> <span class="s">"unsigned"</span><span class="p">};</span> <span class="c1">// space</span>
+<span class="kt">char</span> <span class="n">l_struct_or_union</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">"struct"</span><span class="p">,</span> <span class="s">"union"</span><span class="p">};</span> <span class="c1">// space</span>
+<span class="err">\</span> <span class="err">\</span> <span class="err">\</span> <span class="err">\</span> <span class="err">\</span> <span class="err">\</span> <span class="err">\</span><span class="n">vdots</span>
+<span class="kt">char</span> <span class="n">l_exclamation</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">"!"</span><span class="p">};</span>
+</code></pre></div></div>
+
+<p>プログラム14では「l_compare()」の実装を示す。先程説明した文字列「s」、トーケン文字列の配列「hash」、トーケン文字列の配列の長さ「keyCount」を除いて、真偽値の「cmpterm」が与えられている。「cmpterm」が真であれば、型指定子のように変数名の一部でないことを確かめる様になっている。「l_variable_char()」は文字が変数名に使用可能かどうかを返す単純な関数である。また、「l_compare()」で一致があった場合、文字列をその分進めるために、文字列「s」は二重ポインタとして受け取っている。</p>
+
+<div style="text-align: center;"> プログラム14：l_compare()の実装 [2] </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">l_compare</span><span class="p">(</span><span class="kt">int</span> <span class="n">cmpterm</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">s</span><span class="p">,</span> <span class="kt">char</span> <span class="n">hash</span><span class="p">[][</span><span class="mi">10</span><span class="p">],</span> <span class="kt">int</span> <span class="n">keyCount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">keyCount</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">strncmp</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="n">hash</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">strlen</span><span class="p">(</span><span class="n">hash</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">cmpterm</span> <span class="o">&amp;&amp;</span> <span class="n">strlen</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">strlen</span><span class="p">(</span><span class="n">hash</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;&amp;</span>
+                        <span class="n">l_variable_char</span><span class="p">((</span><span class="o">*</span><span class="n">s</span><span class="p">)[</span><span class="n">strlen</span><span class="p">(</span><span class="n">hash</span><span class="p">[</span><span class="n">i</span><span class="p">])]))</span> <span class="p">{</span>
+                <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="o">*</span><span class="n">s</span> <span class="o">+=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">hash</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="5構文解析syntax-analysis">5.構文解析（Syntax Analysis）</h1>
+<h2 id="51設計">5.1.設計</h2>
+
+<p>構文解析の目的は抽出したトーケンの羅列から構文的な意味を見出すことである。最終的な出力をAST（Abstract Syntax Tree, 抽象構文木）として、その中間過程であるDepthmap（深度マップ）とPT（Parse Tree, 解析木）も求める[1]。構文解析ではBNFの各要素を関数とみなし、再帰呼び出し的に文法参照を分割していく。この際、Depthmapでは文法一致につながらない呼び出しまで出力し、PTでは文法一致につながる呼び出しだけを出力し、ASTではPTを更に抽象化して必要最小限の情報量に直したものを出力する。</p>
+
+<p>BNFを直接関数に変換する際には、左再帰を書き換えることが重要になる。BNFの豊富な種類と表現基準の問題点として、処理の統一が挙げられる。BNFにおける左再帰とは、処理の最も左側に再帰呼び出しが置かれた要素のことを意味する。プログラム15で示す「additive-expression」は左再帰の一例であり、そのまま関数にすると「multiplicative-expression」として解釈されない限り、2行目の「additive-expression」によって無限呼び出しが発生することがわかる。</p>
+
+<div style="text-align: center;"> プログラム15：BNFの左再帰の例[2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;additive-expression&gt; ::= &lt;multiplicative-expression&gt;
+                        | &lt;additive-expression&gt; + &lt;multiplicative-expression&gt;
+                        | &lt;additive-expression&gt; - &lt;multiplicative-expression&gt;
+</code></pre></div></div>
+
+<p>プログラム15を左再帰でないように書き換える一つの方法として、プログラム16の様に「additive-expression-suffix」などのsuffix（接尾辞）要素を新たに定義し、元の定義を分割することができる。変更前のプログラム15を読み解くと、一個以上の「multiplicative-expression」が「+」や「-」で繋がっていることを表している。また、変更後のプログラム16を読み解くと、一個以上の「multiplicative-expression」の後に任意個の「+」や「-」の接頭辞をもつ「multiplicative-expression」が繋がっていることを表している。結果、同じことを意味していることになる。簡潔化のため、本プロジェクトでは左再帰のBNF要素を全てこの様に接尾辞要素を追加して書き換えている。</p>
+
+<p>なお、プログラム16における「+」「-」はBNFの非終端要素で使われているトーケンであるため、独自の列挙型整数が割り振られている。例えば、「additive-expression-suffix」の1行目を関数に変換したければ、現在のトーケンを「1 (plus)」と照らし合わせ、一致すれば次に「multiplicative-expression」の関数に移行する。</p>
+
+<div style="text-align: center;"> プログラム16：BNFの左再帰を接尾辞を用いて書き換えたもの </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;additive-expression&gt; ::= &lt;multiplicative-expression&gt; {&lt;additive-expression-suffix&gt;}*
+
+&lt;additive-expression-suffix&gt; ::=  + &lt;multiplicative-expression&gt;
+                                    |  - &lt;multiplicative-expression&gt;
+</code></pre></div></div>
+
+<p>次に、構文解析のおおよその流れを先に例として扱った「int x = 3;」を用いて説明する。プログラム17のBNFでは真っ先に処理される4つの要素を示している。このBNFを読み解くと、C言語のプログラムは一つの「Translation Unit」であり、それは任意個の「External Declaration」から成る。「External Declaration」は「Function Definition」（関数定義）か「Declaration」（宣言）のいずれかである。</p>
+
+<div style="text-align: center;"> プログラム17：bnfの最初の4要素[2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;translation-unit&gt; ::= {&lt;external-declaration&gt;}*
+
+&lt;external-declaration&gt; ::= &lt;function-definition&gt;
+                              | &lt;declaration&gt;
+
+&lt;function-definition&gt; ::= {&lt;declaration-specifier&gt;}* &lt;declarator&gt; {&lt;declaration&gt;}* &lt;compound-statement&gt;
+
+&lt;declaration&gt; ::=  {&lt;declaration-specifier&gt;}+ {&lt;init-declarator-list&gt;}* ;
+</code></pre></div></div>
+
+<p>プログラム17の4要素に着目して、参照処理を追っていくと図3の様になる。「Translation Unit」,「External Declaration」と始まり、「Function Definition」と「Declaration」に分裂する様子がまず見受けられる。
+ 
+最初の「Function Definition」という枝では、任意個許される「Declaration Specifier」を一個拾い、一個必須の「Declarator」を拾い、任意個許される「Declaration」を一個も拾わず、一個必須の「Compound Statement」を拾うことができない。つまり、「int x = 3;」は「Function Definition」（関数定義）ではないことになり、この枝は一致に至らない。</p>
+
+<p>次の「Declaration」という枝では、任意個許される「Declaration Specifier」を一個拾い、「Init Declarator List」の中で一個の「Init Declarator」を拾い、最後にセミコーロンを一個拾う。つまり、「int x = 3;」は「Declaration」（宣言）であることになり、この枝は一致に至ったため、一つ目の「External Declaration」として処理される。</p>
+
+<p>最後に、「External Declaration」は任意個許されるが二つ目は見つからず、構文解析は終了する。</p>
+
+<p><img src="/assets/2025-5-28-C89-Parser/figure3.svg" alt="figure3" title="figure3" class="img-large-centered" /></p>
+<div style="text-align: center;"> 図3：BNFの最初の4要素に着目して参照処理を追った結果 </div>
+<p><br /></p>
+
+<p>図3で示す全ての呼び出しを出力したものを Depthmapとする。また、PTは図3を「translation unit」から緑の枝のみを多分木としてまとめたものとして理解できる。</p>
+
+<p>ここでは、PTをASTに変換する処理は3段階「終端圧縮」「接尾辞圧縮」「中間圧縮」に分けて実行する。</p>
+
+<p>終端圧縮では、ある要素の唯一の枝が終端要素であれば、その要素に終端要素を折りたたむ。終端要素は単独ではただのトーケンであるが、その上の要素によって意味づけられるため中間過程を圧縮することを考える。プログラム18で示すのは「int x, y;」のPTとそれに終端圧縮を施したものである。終端要素を表す「symbol」が単独で上の要素から生えている部分に注目すると、「symbol」についていた終端トーケンがそのまま上の要素に移行していることがわかる。また、最初の「type specifier」の部分の過程を図4で示す。</p>
+
+<div style="text-align: center;"> プログラム18： PTを終端圧縮する前（上）と後（下） </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── external declaration
+    └── declaration
+        ├── declaration specifier
+        │   └── type specifier
+        │       └── symbol {int}
+        ├── init declarator list
+        │   ├── init declarator
+        │   │   └── declarator
+        │   │       └── direct declarator
+        │   │           └── identifier
+        │   │               └── symbol {x}
+        │   └── init declarator list suffix
+        │       ├── symbol {,}
+        │       └── init declarator
+        │           └── declarator
+        │               └── direct declarator
+        │                   └── identifier
+        │                       └── symbol {y}
+        └── symbol {;}	
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── external declaration
+    └── declaration
+        ├── declaration specifier
+        │   └── type specifier {int}
+        ├── init declarator list
+        │   ├── init declarator
+        │   │   └── declarator
+        │   │       └── direct declarator
+        │   │           └── identifier {x}
+        │   └── init declarator list suffix
+        │       ├── symbol {,}
+        │       └── init declarator
+        │           └── declarator
+        │               └── direct declarator
+        │                   └── identifier {y}
+        └── symbol {;}
+
+</code></pre></div></div>
+
+<p><img src="/assets/2025-5-28-C89-Parser/figure4.svg" alt="figure4" title="figure4" class="img-large-centered" /></p>
+<div style="text-align: center;"> 図4：終端圧縮の一例 </div>
+<p><br /></p>
+
+<p>接尾辞圧縮では、左再帰を書き換えるために追加した接尾辞要素を取り除く。プログラム19で示すのは終端圧縮済みのPTとそれに接尾辞圧縮を施したものである。この際に圧縮した「init declarator list」と「init declarator list suffix」は「int x, y;」における「x, y」の部分を表し、「init declarator」「symbol（comma）」「init declarator」から成る。つまり、「init declarator list suffix」の中身を「init declarator list」と並ぶように一段分上に上げればいい。また、この様子を図5で示す。</p>
+
+<div style="text-align: center;"> プログラム19： PTを接尾辞圧縮する前（上）と後（下） </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── external declaration
+    └── declaration
+        ├── declaration specifier
+        │   └── type specifier {int}
+        ├── init declarator list
+        │   ├── init declarator
+        │   │   └── declarator
+        │   │       └── direct declarator
+        │   │           └── identifier {x}
+        │   └── init declarator list suffix
+        │       ├── symbol {,}
+        │       └── init declarator
+        │           └── declarator
+        │               └── direct declarator
+        │                   └── identifier {y}
+        └── symbol {;}
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── external declaration
+    └── declaration
+        ├── declaration specifier
+        │   └── type specifier {int}
+        ├── init declarator list
+        │   ├── init declarator
+        │   │   └── declarator
+        │   │       └── direct declarator
+        │   │           └── identifier {x}
+        │   ├── symbol {,}
+        │   └── init declarator
+        │       └── declarator
+        │           └── direct declarator
+        │               └── identifier {y}
+        └── symbol {;}
+
+</code></pre></div></div>
+
+<p><img src="/assets/2025-5-28-C89-Parser/figure5.svg" alt="figure5" title="figure5" class="img-large-centered" /></p>
+<div style="text-align: center;"> 図5：接尾辞圧縮の一例 </div>
+<p><br /></p>
+
+<p>中間圧縮では、一本の枝しか持たない要素を省略する。一本の枝しか持たない要素は言うならば、構文参照の中間過程でしかない。一本の枝で繋がれた長い要素の連鎖を想像すると、唯一トーケンの直接的な意味を表す新しい終端要素だけを保存しながら、中間の要素を消していくイメージである。プログラム20で示すのは終端圧縮および接尾辞圧縮済みのPTとそれに中間圧縮を施したものである。図6で示すように、「external declaration」は「declaration」の枝を一本のみ持つため、省略されている。その他に「init declarator list」の中身は一本の枝で繋がれた連鎖の様なものであるため、全て省力して新しく終端要素となった「identifier」と「symbol(comma)」が引き上げられている。</p>
+
+<div style="text-align: center;"> プログラム20： PTを中間圧縮する前（上）と後（下） </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── external declaration
+    └── declaration
+        ├── declaration specifier
+        │   └── type specifier {int}
+        ├── init declarator list
+        │   ├── init declarator
+        │   │   └── declarator
+        │   │       └── direct declarator
+        │   │           └── identifier {x}
+        │   ├── symbol {,}
+        │   └── init declarator
+        │       └── declarator
+        │           └── direct declarator
+        │               └── identifier {y}
+        └── symbol {;}
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└──  declaration
+        ├── type specifier {int}
+        ├── init declarator list
+        │   ├── identifier {x}
+        │   ├── symbol {,}
+        │   └── identifier {y}
+        └── symbol {;}
+
+</code></pre></div></div>
+
+<p><img src="/assets/2025-5-28-C89-Parser/figure6.svg" alt="figure6" title="figure6" class="img-large-centered" /></p>
+<div style="text-align: center;"> 図6：中間圧縮の1例 </div>
+<p><br /></p>
+
+<h2 id="52実装">5.2.実装</h2>
+
+<p>プログラム21では構文解析に理想的なmainの形を示している。字句解析の様に、行ごとの構文確認は数倍難しくなるため、単純に抽出したトーケンリストに一回呼び出す。正常に構文解析が終了すれば「compiled successfully」、失敗したら「syntax error」と標準出力する。</p>
+
+<div style="text-align: center;"> プログラム21：構文解析に理想的なmainの形 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="c1">// open file</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span><span class="n">printf</span><span class="p">(</span><span class="s">"invalid arguments</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;}</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">file</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">"r"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">file</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">"unable to open file</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span> 
+    <span class="c1">// construct tokens and objects</span>
+    <span class="n">Token</span><span class="o">*</span> <span class="n">tokens</span>  <span class="o">=</span> <span class="n">construct</span><span class="p">();</span>
+    <span class="err">\</span><span class="n">vdots</span>
+    <span class="c1">// syntactical analysis  </span>
+    <span class="k">if</span><span class="p">(</span><span class="n">syn</span><span class="p">(</span><span class="n">tokens</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">))</span> <span class="p">{</span><span class="n">printf</span><span class="p">(</span><span class="s">"syntax error</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> <span class="k">goto</span> <span class="n">E</span><span class="p">;}</span>
+    <span class="c1">// no errors</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"compiled successfully</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="nl">E:</span>  <span class="c1">// close file</span>
+    <span class="n">fclose</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>プログラム22で示す構文解析関数「syn()」の定義は、「s_translation_unit()」の呼び出しで構文解析が始まり、最後の条件文内で出来上がったPTをASTに変換する。</p>
+
+<div style="text-align: center;"> プログラム22：syn()関数の定義 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">syn</span><span class="p">(</span><span class="n">Token</span><span class="o">*</span> <span class="n">token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//  Depthmapを開く</span>
+    <span class="n">s_syntax_depth_map</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"./Meta/depthmap.txt"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">s_syntax_depth_map</span><span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">"depthmap failed to open</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// 構文解析</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">s_F_end_of_token</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">s_translation_unit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">token</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="c1">// Depthmapを閉じる</span>
+    <span class="n">fclose</span><span class="p">(</span><span class="n">s_syntax_depth_map</span><span class="p">);</span>
+    <span class="c1">// PT出力、AST作成、AST出力</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_print</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="s">"./Meta/pt.txt"</span><span class="p">);</span>
+        <span class="n">n_simplify</span><span class="p">(</span><span class="n">head</span><span class="p">);</span>
+        <span class="n">n_print</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="s">"./Meta/ast.txt"</span><span class="p">);</span>
+        <span class="n">n_free</span><span class="p">(</span><span class="n">head</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>BNFを関数に変換する際には、プログラム23とプログラム24の様に行う。プログラム24の関数自体は、現在処理中のトーケンへのポインタとDepthmap用の整数「depth」を受け取り、部分木へのポインタを返す。プログラム23のBNFは「direct declarator」の２通りの可能性を示しているため、まずこの節目で処理を分割する。gotoラベルに着目して「c2」の手前と「f」の手前とで関数を分けることができる。「identifier」のようなBNFの単独要素は、プログラム24の最初のif文のように訳すことができる。「s_identifier()」の呼び出しが一致する場合、何もせず次の行に進む。逆に、「s_identifier()」の結果が一致しない場合、次のラベル「c2」に順次移行する。</p>
+
+<div style="text-align: center;"> プログラム23：direct declarator のBNF [2] </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;direct-declarator&gt; ::= &lt;identifier&gt; {&lt;direct-declarator-suffix&gt;}*
+                          | ( &lt;declarator&gt; ) {&lt;direct-declarator-suffix&gt;}*
+</code></pre></div></div>
+
+<div style="text-align: center;"> プログラム24：direct declaratorの関数 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span><span class="o">*</span> <span class="nf">s_direct_declarator</span><span class="p">(</span><span class="n">Token</span><span class="o">**</span> <span class="n">token</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PRINTMAP</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="s">"direct declarator"</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">token</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">node</span> <span class="o">=</span> <span class="n">n_construct</span><span class="p">(</span><span class="n">n_direct_declarator</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">Token</span><span class="o">*</span> <span class="n">ptoken</span> <span class="o">=</span> <span class="o">*</span><span class="n">token</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">n_push</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">s_identifier</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span> <span class="k">goto</span> <span class="n">c2</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">n_push</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">s_direct_declarator_suffix</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)));</span>
+    <span class="k">goto</span> <span class="n">t</span><span class="p">;</span>
+<span class="nl">c2:</span> <span class="o">*</span><span class="n">token</span> <span class="o">=</span> <span class="n">ptoken</span><span class="p">;</span> <span class="n">n_reset</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">n_push</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">s_compare</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">h_parenthesis</span><span class="p">)))</span> <span class="k">goto</span> <span class="n">f</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">n_push</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">s_declarator</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span> <span class="k">goto</span> <span class="n">f</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">n_push</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">s_compare</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">t_parenthesis</span><span class="p">)))</span> <span class="k">goto</span> <span class="n">f</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">n_push</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">s_direct_declarator_suffix</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)));</span>
+    <span class="k">goto</span> <span class="n">t</span><span class="p">;</span>
+<span class="n">f</span> <span class="o">:</span> <span class="o">*</span><span class="n">token</span> <span class="o">=</span> <span class="n">ptoken</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">n_free</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+<span class="n">t</span> <span class="o">:</span> <span class="k">return</span> <span class="n">node</span><span class="p">;</span>        
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>プログラム23の「direct declarator suffix」のようなBNFの任意個許される要素は、プログラム24のwhile文のように訳すことができる。「s_direct_declarator_suffix」が一致する限り読み込んでいくことを意味し、一つも一致しない場合にも許されるため次のラベルに飛ぶ必要もない。プログラム24の場合では、いずれの場合でも一致が確定しているため、次の「goto t;」で現在の部分木を返す。BNFの「declarator」の周りの括弧はトーケンの列挙型を確認すれば確かめられ、プログラム24で示すように関数「s_compare()」を用いて同じように一致を確認をしている。</p>
+
+<p>プログラム24の先頭部分にある「PRINTMAP」は、Depthmapのために、全ての関数の先頭で実行されるマクロである。続く2行では、この関数以下の木構造を表す部分木を宣言し、処理前のトーケンリストにおける位置を一時的に保存している。また、構文参照呼び出しを囲んでいる「n_push」は、中の呼び出しの戻り値が部分木であれば「node」に追加して1を返し、NULLであれば0を返す。「t」を除く各ラベルの後に「*token = ptoken;」と「n_reset(node);」があるのは、各部分で一致しなかった場合に進められた「token」と追加された「node」を初期状態に戻している。つまり、トーケンリストの位置は必ず進められるし、部分木は必ず生成されるが、一致した場合のみにトーケンリスト位置の変更が反映され、部分木が上のレベルに返される。</p>
+
+<p>最後に木構造のテンプレートをプログラム25で示す。ここで言う「type」は以前扱ってきた「type」と異なり、別の列挙型で構文解析における関数やBNF要素の対応を示す。</p>
+
+<div style="text-align: center;"> プログラム25：Nodeのテンプレート </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">NODE</span><span class="p">{</span>
+   <span class="k">struct</span> <span class="n">NODE</span><span class="o">**</span> <span class="n">next</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">type</span><span class="p">;</span>
+   <span class="k">const</span> <span class="n">Token</span><span class="o">*</span> <span class="n">token</span><span class="p">;</span> <span class="c1">// allocated and freed by token</span>
+<span class="p">}</span> <span class="n">Node</span><span class="p">;</span>
+
+<span class="n">Node</span><span class="o">*</span> <span class="nf">n_free</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">);</span>
+<span class="n">Node</span><span class="o">*</span> <span class="nf">n_reset</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">);</span>
+<span class="n">Node</span><span class="o">*</span> <span class="nf">n_construct</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="n">Token</span><span class="o">*</span> <span class="n">token</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">n_push</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">,</span> <span class="n">Node</span><span class="o">*</span> <span class="n">node</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">n_print</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">n_helper</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">endge</span><span class="p">,</span> <span class="kt">int</span> <span class="n">state</span><span class="p">[]);</span>
+<span class="kt">void</span> <span class="nf">n_simplify</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">n_compress_symbol</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">n_compress_chain</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">n_compress_suffix</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">);</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">n_get</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>「n_free()」と「n_reset()」はいずれも木構造を解放しているが、後者の場合では枝を全てもぎ取って根を残した様なものである。「n_construct()」「n_push()」「n_print()」「n_helper()」はそれぞれコンストラクタ、枝追加、出力、出力用の再帰関数、となっているが、これらは比較的標準的な実装となっている。次に、全ての圧縮操作を呼び出す「n_simplify()」の実装をプログラム26で示す。</p>
+
+<div style="text-align: center;"> プログラム26：n_simplify()の実装  </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">n_simplify</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">n_compress_symbol</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
+    <span class="n">n_compress_suffix</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
+    <span class="n">n_compress_chain</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">n_simplify</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>プログラム26でわかるように、終端圧縮、接尾辞圧縮、中間圧縮をそれぞれ一回ずつ呼び出し、全ての枝について再帰を呼び出す。圧縮関数は条件が成立しないと圧縮が施されないため、このように深度別に実行すると考えやすくなる。比較的わかりにくい「n_compress_suffix」（接尾辞圧縮）の実装をプログラム27で解説する。</p>
+
+<div style="text-align: center;"> プログラム27：n_compress_suffix()の実装  </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">n_compress_suffix</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">this</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">length</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="k">switch</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">n_struct_declarator_list</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">n_direct_declarator</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
+        <span class="err">\</span><span class="n">vdots</span>
+        <span class="k">case</span> <span class="n">n_initializer_list</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
+        <span class="nl">default:</span> <span class="k">return</span><span class="p">;</span> <span class="c1">// no suffix to compress</span>
+    <span class="p">}</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Node</span><span class="o">*</span> <span class="n">next</span> <span class="o">=</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">!=</span> <span class="n">next</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="n">this</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">+=</span> <span class="n">next</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">Node</span><span class="o">**</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span><span class="p">));</span>
+        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">||</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">next</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">];</span>
+                <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">[</span><span class="n">l</span><span class="o">++</span><span class="p">];</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="n">i</span><span class="p">)</span> <span class="n">k</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+        <span class="n">this</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>接尾辞圧縮はそもそも接尾辞要素を追加したBNF要素のみに施せるから、プログラム27の先頭部分にあるswitch文を用いて現在のnodeが圧縮対象かどうか確認する。圧縮対象のnodeについて「next」を接尾辞の中身分足したサイズで再確保する。再確保した「next」に今までの要素をコピーしたのち、接尾辞要素の中身もコピーしていく。最後に、抜かれた接尾辞nodeは解放する。
+ </p>
+<h1 id="6制限事項">6.制限事項</h1>
+
+<p>実際に使われているC言語のコンパイラは本プロジェクトとレポートの範囲をはるかに超える規模と複雑さを有している。本章では、今回実装したパーサーが標準的なC言語のコンパイラと異なる点について補足する。簡単なものから始めると、複数行を跨ぐコメント、すなわち「/<em>」「</em>/」で指定されるコメントは扱えない。―行コメント「//」より実装がやや複雑で、コンパイラの仕組みを解明する趣旨にさほど関係ないため実装は省いた。</p>
+
+<p>次に、実際のCファイルには含まれ得るが、パーサーの範囲外であるため処理していないものがある。例えば、プリプロセッサディレクティブ、マクロ宣言、ファイルインクルードなどが挙げられる。プリプロセッサディレクティブやマクロ宣言については、Cスタンダード[3]などに記載されるBNFを用いて本レポートの実装手法と同様に構文解析し、単純なトーケン置換で実現することができる。</p>
+
+<p>最後に、実際のCコンパイラに含まれ、パーサーの範囲内であるが、実装が煩雑であるため省いたものについて補足する。今回実装したパーサーにはidentifierと呼ばれる変数や関数名のスコープ確認や、式及び代入のタイプ確認の機能は含まれていない。実際のCコードでは、identifierなる変数や関数名は、それぞれタイプとスコープを持っている。タイプはその通り、変数のタイプや関数の戻り値を意味する。スコープは主に変数の宣言時からメモリの解放時までの期間、いわゆる「ライフタイム」を指し示している。簡単な例として、変数や関数が、宣言される前に使われていないことを確かめる作業がある。高度な例として、compound statement と称される鉤括弧「{}」内で宣言された変数が、その括弧外（スコープ外）で使われていないことを確かめる作業がある。これらの確認を行うのは一見容易に思えるが、ユーザー定義型のstructやunion、もしくはtypedefによる型宣言を考慮し始めると、構文解析と意味解析を隔てるものが薄れて消えてしまう。実際のコンパイラでは構文解析を複数回行ったり、抽象構文木を並行に作りながらの構文解析を行うといった対処法がある。一方、式及び代入のタイプ確認では、ある式のタイプをその構成要素から推測し、代入文や引数などのタイプ不一致を知らせる。Identifierの例のように、これも一見容易に見えるがユーザ定義型などを考慮すると煩雑になる上、intはintというー対ーの対応になるとは限らないことが難しさを際立たせている。例えば、int型の変数に代入できるものとしてint型、char型、float型、double型、ポインタ、のようにいくらでも互換や変換が可能である。このような対応はCスタンダード[3]にも記載されていないため、全てのケースについて網羅することは極めて難しいため、今回のパーサーには実装していない。
+ </p>
+<h1 id="7実験">7.実験</h1>
+
+<p>本章では、いくつかの代表的なC言語の要素を実際にコンパイルし、コンパイルが通るものについてはそのASTを考察し、コンパイルの通らないものについてはその理由を補足する。プログラム28で示す最初の実験では、main関数の宣言のみをコンパイルした。実際のCコンパイラはmainが定義されていないためエラーを挙げるが、本パーサーはそのようなメタ読みは行わず、他の関数同様の関数宣言とみなしている。</p>
+
+<div style="text-align: center;"> プログラム28：関数宣言  </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">();</span>	
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── declaration
+    ├── type specifier {int}
+    ├── direct declarator
+    │   ├── identifier {main}
+    │   ├── symbol {(}
+    │   └── symbol {)}
+    └── symbol {;}
+
+</code></pre></div></div>
+
+<p>プログラム29の二つ目の実験では、通常終了するシンプルなmain関数をコンパイルしてみる。右の抽象構文木からわかるように、プログラム28ではdeclarationだった枠組みが今回はfunction definitionになっている。これはプログラム30のBNFにあるように、関数宣言と定義は全く別ものとして解釈されていることを示している。プログラム29の場合は関数定義であるため、type specifierが型を拾い、direct declaratorが関数名と引数リストを拾い、compound statementとして鉤括弧の中身が解釈されている。なお、コメントは飛ばされ、return文はjump statementとして整数constantの0を返すことになる。</p>
+
+<div style="text-align: center;"> プログラム29：通常終了するmain </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// some code</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>	
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+└── function definition
+    ├── type specifier {int}
+    ├── direct declarator
+    │   ├── identifier {main}
+    │   ├── symbol {(}
+    │   └── symbol {)}
+    └── compound statement
+        ├── symbol {{}
+        ├── jump statement
+        │   ├── symbol {return}
+        │   ├── constant {0}
+        │   └── symbol {;}
+        └── symbol {}}
+
+</code></pre></div></div>
+
+<div style="text-align: center;"> プログラム30：declarationとfunction definitionの違い </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+&lt;external-declaration&gt; ::= &lt;function-definition&gt;
+                         | &lt;declaration&gt;
+
+&lt;function-definition&gt; ::= {&lt;declaration-specifier&gt;}* &lt;declarator&gt; {&lt;declaration&gt;}* &lt;compound-statement&gt;
+
+&lt;declaration&gt; ::=  {&lt;declaration-specifier&gt;}+ {&lt;init-declarator-list&gt;}* ;
+
+</code></pre></div></div>
+
+<p>プログラム31で示す三つ目の実験では、さまざまな変数定義をコンパイルしている。最初の1行ではinit declarator listを用いてidentifier「x」とinit declarator「y=10」を同じ行で定義している。2行目では、double型の変数「f」を定数 $1.54334 \times 10^{-34}$ で初期化している。この定数は先に触れた「constant.h」の定数BNFに基づいて構文解析が施され、最終的にconstant字句として解釈される。同様に、3行目の文字列を初期化するために文字列リテラルとして「constant.h」で解釈される。また、抽象構文木については、「s[10]」はdirect declaratorとして一括で拾われている。4行目では整数配列を初期化している。初期化に用いている「{1, 2, 3}」はinitializer listを含むinitializerとして解釈されている。</p>
+
+<div style="text-align: center;"> プログラム31：変数定義  </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">f</span> <span class="o">=</span> <span class="mf">1.54334E-34</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">"something"</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>	
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+translation unit
+├── declaration
+│   ├── type specifier {int}
+│   ├── init declarator list
+│   │   ├── identifier {x}
+│   │   ├── symbol {,}
+│   │   └── init declarator
+│   │       ├── identifier {y}
+│   │       ├── symbol {=}
+│   │       └── constant {10}
+│   └── symbol {;}
+├── declaration
+│   ├── type specifier {double}
+│   ├── init declarator
+│   │   ├── identifier {f}
+│   │   ├── symbol {=}
+│   │   └── constant {1.54334E-34}
+│   └── symbol {;}
+├── declaration
+│   ├── type specifier {char}
+│   ├── init declarator
+│   │   ├── direct declarator
+│   │   │   ├── identifier {s}
+│   │   │   ├── symbol {[}
+│   │   │   ├── constant {10}
+│   │   │   └── symbol {]}
+│   │   ├── symbol {=}
+│   │   └── constant {"something"}
+│   └── symbol {;}
+└── declaration
+    ├── type specifier {int}
+    ├── init declarator
+    │   ├── direct declarator
+    │   │   ├── identifier {array}
+    │   │   ├── symbol {[}
+    │   │   ├── constant {3}
+    │   │   └── symbol {]}
+    │   ├── symbol {=}
+    │   └── initializer
+    │       ├── symbol {{}
+    │       ├── initializer list
+    │       │   ├── constant {1}
+    │       │   ├── symbol {,}
+    │       │   ├── constant {2}
+    │       │   ├── symbol {,}
+    │       │   └── constant {3}
+    │       └── symbol {}}
+    └── symbol {;}
+
+</code></pre></div></div>
+
+<p>プログラム32で示す4つ目の実験では、条件文をコンパイルしている。関数外での宣言や定義以外の処理を置くことはエラーになるため、単純なmain関数の中から切り取ったものである。If-else文の枠組みはif文やswitch文同様のselection statementであり、else ifの部分はif-else文の中のif文として解釈されていることがわかる。また、条件「1 » 1」も正しくshift expressionとして認識され、return文は鉤括弧なしでもきちんと認識されている。</p>
+
+<div style="text-align: center;"> プログラム32：条件文 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="mi">1</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// some code</span>
+<span class="p">}</span>	   
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+    └── compound statement
+        ├── symbol {{}
+        ├── selection statement
+        │   ├── symbol {if}
+        │   ├── symbol {(}
+        │   ├── shift expression
+        │   │   ├── constant {1}
+        │   │   ├── symbol {&gt;&gt;}
+        │   │   └── constant {1}
+        │   ├── symbol {)}
+        │   ├── jump statement
+        │   │   ├── symbol {return}
+        │   │   ├── constant {0}
+        │   │   └── symbol {;}
+        │   ├── symbol {else}
+        │   └── selection statement
+        │       ├── symbol {if}
+        │       ├── symbol {(}
+        │       ├── constant {1}
+        │       ├── symbol {)}
+        │       └── compound statement
+        │           ├── symbol {{}
+        │           └── symbol {}}
+
+</code></pre></div></div>
+
+<p>プログラム33で示す5つ目の実験では、forループをコンパイルしている。これもまた単純なmainの中身を切り取ったものである。Whileループ同様のiteration statementの枠組みの中でassignment expression, relational expression, postfix expressionの分別はいずれも正しく行われている様子が伺える。</p>
+
+<div style="text-align: center;"> プログラム33：繰り返し文 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// some code</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+	├── iteration statement
+        │   ├── symbol {for}
+        │   ├── symbol {(}
+        │   ├── assignment expression
+        │   │   ├── identifier {i}
+        │   │   ├── assignment operator {=}
+        │   │   └── constant {0}
+        │   ├── symbol {;}
+        │   ├── relational expression
+        │   │   ├── identifier {i}
+        │   │   ├── symbol {&lt;}
+        │   │   └── constant {5}
+        │   ├── symbol {;}
+        │   ├── postfix expression
+        │   │   ├── identifier {i}
+        │   │   └── symbol {++}
+        │   ├── symbol {)}
+        │   └── compound statement
+        │       ├── symbol {{}
+        │       └── symbol {}}
+
+</code></pre></div></div>
+
+<p>プログラム34で示す6つ目の実験では、switch文をコンパイルしている。Switch文は正しくselection statement として認識され、identifier「x」についてlabeled statement「case 0:」と「case 1:」に分けられている。また、break文は正しくjump statementとして認識されていることも確認できる。</p>
+
+<div style="text-align: center;"> プログラム34：switch文 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">switch</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  
+	├── selection statement
+        │   ├── symbol {switch}
+        │   ├── symbol {(}
+        │   ├── identifier {x}
+        │   ├── symbol {)}
+        │   └── compound statement
+        │       ├── symbol {{}
+        │       ├── labeled statement
+        │       │   ├── symbol {case}
+        │       │   ├── constant {0}
+        │       │   ├── symbol {:}
+        │       │   └── jump statement
+        │       │       ├── symbol {break}
+        │       │       └── symbol {;}
+        │       ├── labeled statement
+        │       │   ├── symbol {case}
+        │       │   ├── constant {1}
+        │       │   ├── symbol {:}
+        │       │   └── jump statement
+        │       │       ├── symbol {break}
+        │       │       └── symbol {;}
+        │       └── symbol {}}
+
+</code></pre></div></div>
+
+<p>プログラム35で示す7つ目の実験では、宣言されていない変数を使うコードをコンパイルしてみた。このコードは実際のコンパイラを通ることはないが、本パーサーは文脈なしにただの代入文のように解釈する。スコープ確認がついていたら、「Allowed」のスコープ外の使用といった形でシンタックスエラーになる。</p>
+
+<div style="text-align: center;"> プログラム35：宣言されてない変数を使う  </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Allowed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+	├── expression statement
+        │   ├── assignment expression
+        │   │   ├── identifier {Allowed}
+        │   │   ├── assignment operator {=}
+        │   │   └── constant {1}
+        │   └── symbol {;}
+
+</code></pre></div></div>
+
+<p>以下ではコンパイルが失敗したコードをいくつか紹介する。一つ目はプログラム36で示すような不正変数名である。C89では変数名にはアルファベット小文字、大文字、「＿」のみが許されているため、「unallowed123」は不正変数名になる。実際に字句解析の結果を調べると、user-defined「unallowed」とinteger constant「123」に分けられているため、構文解析ではシンタックスエラーとなる。</p>
+
+<div style="text-align: center;"> プログラム36：不正変数名 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">unallowed123</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>プログラム37は先ほど説明した、関数外の処理を示している。Main関数のcompound statementの外で条件文の処理が行われているため、これはシンタックスエラーになる。</p>
+
+<div style="text-align: center;"> プログラム37：関数外の処理 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<p>プログラム38では単純な変数定義にセミコロンが欠落している例を示している。この例を含む多くの場合には、シンタックスエラーとなるが、二つの行が合体して正しい構文をなす際にはエラーなくコンパイルされる。これは現実のコンパイラと変わらない。</p>
+
+<div style="text-align: center;"> プログラム38：セミコロンの欠落 </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>プログラム39ではfor文のインデックス変数「i」がfor文内で宣言されているものを示している。これはC99以降では可能となったが、C89では許されていないためシンタックスエラーを挙げる。実際にC89のBNFを見ると、プログラム40で示すようにcompound statementの定義、すなわち関数の内部処理は任意個の宣言の後に、任意個の処理が想定されている。</p>
+
+<div style="text-align: center;"> プログラム39：宣言が処理の先に来ない場合  </div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div style="text-align: center;"> プログラム40：compound statement のBNF </div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+&lt;compound-statement&gt; ::= { {&lt;declaration&gt;}* {&lt;statement&gt;}* }
+
+</code></pre></div></div>
+
+<h1 id="8おわりに">8.おわりに</h1>
+<p>本レポートでは、C言語のコンパイラの仕組みを学習し、解析部分の一部を設計及び実装した。今回実装したパーサーは字句解析と構文解析から成り、入力コードから抽象構文木を生成するところまで実装した。また、この過程に必要となるBNFや構文木についても学びを深めた。最後に、実装したパーサーにテストコードを入力し、その出力について考察した。</p>
+
+<p>このプロジェクトを進める中で、特にBNFの使い方がとても印象的であった。BNFの項をそのまま関数とし、文法を共有する他に、その解析法まで共有できるのは感動的なものである。一方で、コンパイラの内部を学習していく中で、その規模に萎縮してしまう部分もあった。今後プログラミングと深く関わっていく者として、今回の経験と学びを大切にしていきたいと感じる。</p>
+
+<h1 id="9参考文献">9.参考文献</h1>
+
+<p>[1]. “コンパイラ/コンパイラの概説 - Wikibooks,” Wikibooks.org, 2022. https://ja.wikibooks.org/wiki/%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9/%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9%E3%81%AE%E6%A6%82%E8%AA%AC (accessed Dec. 30, 2024).</p>
+
+<p>[2]. “The syntax of C in Backus-Naur form,” Wmich.edu, 2021. https://cs.wmich.edu/~gupta/teaching/cs4850/sumII06/The%20syntax%20of%20C%20in%20Backus-Naur%20form.htm</p>
+
+<p>[3]. “1999 C Standard Committee Draft,” open-std.org, Sep. 07, 2007. https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf (accessed Feb. 03, 2025).</p>
 
         
       </section>
@@ -322,7 +1253,7 @@
       <section class="page__share">
   <h4 class="page__share-title">Share on</h4>
 
-  <a href="https://x.com/intent/tweet?text=C89+Parser+Implementaion+in+C%20http%3A%2F%2Flocalhost%3A4000%2Fprojects%2FC89-Parser%2F" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
+  <a href="https://x.com/intent/tweet?text=C89%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9%E3%81%AE%E3%83%91%E3%83%BC%E3%82%B5%E3%82%92C%E3%81%A7%E5%AE%9F%E8%A3%85%20http%3A%2F%2Flocalhost%3A4000%2Fprojects%2FC89-Parser%2F" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on X">
     <i class="fab fa-fw fa-x-twitter" aria-hidden="true"></i><span> X</span>
   </a>
 
@@ -334,7 +1265,7 @@
     <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
   </a>
 
-  <a href="https://bsky.app/intent/compose?text=C89+Parser+Implementaion+in+C%20http%3A%2F%2Flocalhost%3A4000%2Fprojects%2FC89-Parser%2F" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
+  <a href="https://bsky.app/intent/compose?text=C89%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9%E3%81%AE%E3%83%91%E3%83%BC%E3%82%B5%E3%82%92C%E3%81%A7%E5%AE%9F%E8%A3%85%20http%3A%2F%2Flocalhost%3A4000%2Fprojects%2FC89-Parser%2F" class="btn btn--bluesky" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Bluesky">
     <i class="fab fa-fw fa-bluesky" aria-hidden="true"></i><span> Bluesky</span>
   </a>
 </section>
@@ -343,10 +1274,10 @@
       
   <nav class="pagination">
     
-      <a href="#" class="pagination--pager disabled">Previous</a>
+      <a href="/projects/3D-Reconstruction/" class="pagination--pager" title="文化遺産の保存と共有のための３次元復元（英語版）- 共同研究">Previous</a>
     
     
-      <a href="/projects/Gpsolve/" class="pagination--pager" title="General Purpose Numerical Optimization Solver">Next</a>
+      <a href="/projects/Path-Planner/" class="pagination--pager" title="差動駆動およびホロノミックロボット向け経路計画インターフェース">Next</a>
     
   </nav>
 
@@ -374,7 +1305,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/projects/Path-Planner/" rel="permalink">Path Planning Interface for Differential and Holonomic VEX Robots
+        <a href="/projects/Path-Planner/" rel="permalink">差動駆動およびホロノミックロボット向け経路計画インターフェース
 </a>
       
     </h2>
@@ -399,9 +1330,7 @@
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">説明
-
-</p>
+    <p class="archive__item-excerpt" itemprop="description">このプロジェクトでは、差動駆動およびホロノミック Vex ロボットの滑らかな経路生成における Cubic Hermite Spline の応用について詳述します。経路生成は Desmos の使用により簡略化されています。また、本プロジェクトでは、初速度と最終速度、初期加速度と最終加速度、移動距離を与えたときの速度...</p>
   </article>
 </div>
 
@@ -416,7 +1345,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/projects/Gpsolve/" rel="permalink">General Purpose Numerical Optimization Solver
+        <a href="/projects/3D-Reconstruction/" rel="permalink">文化遺産の保存と共有のための３次元復元（英語版）- 共同研究
 </a>
       
     </h2>
@@ -434,15 +1363,14 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          less than 1 minute read
+          25 minute read
         
       </span>
     
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">
-</p>
+    <p class="archive__item-excerpt" itemprop="description">Some would say that we are currently living through the information age, a universal turning point for civilization which has the potential to rival the agri...</p>
   </article>
 </div>
 
@@ -461,9 +1389,25 @@
 
     <div id="footer" class="page__footer">
       <footer>
-        <!-- start custom footer snippets -->
+        <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']], // Tells MathJax to look for $...$ and \(...\)
+    displayMath: [['$$','$$'], ['\\[','\\]']], // Standard display math
+    processEscapes: true, // Allows for escaping special characters
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // Important to avoid conflicts
+  },
+  TeX: {
+    equationNumbers: { autoNumber: "AMS" } // Optional: For AMS style equation numbering
+  }
+});
+</script>
 
-<!-- end custom footer snippets -->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<link rel="stylesheet" href="/assets/css/custom.css">
         <div class="page__footer-follow">
   <ul class="social-icons">
     

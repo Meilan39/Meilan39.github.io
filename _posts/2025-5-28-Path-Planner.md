@@ -1,11 +1,9 @@
 ---
-title: "Path Planning Interface for Differential and Holonomic VEX Robots"
+title: "差動駆動およびホロノミックロボット向け経路計画インターフェース"
 date: 2025-05-28
 categories: projects
 mathjax: true
 ---
-
-# 説明
 
 このプロジェクトでは、差動駆動およびホロノミック [Vex](https://www.vexrobotics.com/) ロボットの滑らかな経路生成における [Cubic Hermite Spline](https://en.wikipedia.org/wiki/Cubic_Hermite_spline) の応用について詳述します。経路生成は [Desmos](https://www.desmos.com/) の使用により簡略化されています。また、本プロジェクトでは、初速度と最終速度、初期加速度と最終加速度、移動距離を与えたときの速度プロファイルを生成する簡単な方法も提案しています。これは高校最終学年の間に取り組んだプロジェクトであり、多くの改善の余地が残されていますが、その一部を本記事で紹介します。
 
@@ -172,7 +170,7 @@ $$ g(x) = \frac{1}{1 - a_fe^{b_f(x-d)}} \left( a_f > 0, b_f > 0 \right)$$
 
 最後に、2つの関数を掛け合わせ、最大速度 $m$ を掛けることで、最終的なプロファイルが得られます。
 
-![Velocity Profile](../assets/2025-5-28-Path-Planner-assets/profile.svg "プレゼン資料の一部")
+![Velocity Profile](/assets/2025-5-28-Path-Planner/profile.svg "プレゼン資料の一部")
 
 $$ mf(x)g(x) = 
 \frac{m}{
@@ -211,15 +209,15 @@ $$
 
 この処理は、「**ワールド座標系の入力をロボット座標系に変換する**」ということでもあります。
 
-![X-drive](../assets/2025-5-28-Path-Planner-assets/xdrive.svg "プレゼン資料の一部")
+![X-drive](/assets/2025-5-28-Path-Planner/xdrive.svg "プレゼン資料の一部")
 
 次に、$\mathbf{v}$ を $\mathbf{v_{robot}}$ に置き換え、各ホイールの動作を決定します。X-driveは全方向駆動が可能なため、各ホイールの進行方向に対応する単位ベクトルとの内積をとって回転量を算出します。具体的には次のように定義します：
 
 $$
-\mathbf{v_{fl}} = \begin{bmatrix} \cos(45) \\ \sin(45) \end{bmatrix} \ \
-\mathbf{v_{fr}} = \begin{bmatrix} \cos(135) \\ \sin(135) \end{bmatrix} \ \
-\mathbf{v_{rl}} = \begin{bmatrix} \cos(135) \\ \sin(135) \end{bmatrix} \ \
-\mathbf{v_{rr}} = \begin{bmatrix} \cos(45) \\ \sin(45) \end{bmatrix} \ \
+\mathbf{v_{fl}} = \begin{bmatrix} \cos(45) \\ \sin(45) \end{bmatrix}
+\mathbf{v_{fr}} = \begin{bmatrix} \cos(135) \\ \sin(135) \end{bmatrix}
+\mathbf{v_{rl}} = \begin{bmatrix} \cos(135) \\ \sin(135) \end{bmatrix}
+\mathbf{v_{rr}} = \begin{bmatrix} \cos(45) \\ \sin(45) \end{bmatrix}
 $$
 
 内積は、ベクトル同士の方向の一致度を測るもので、各ホイールの相対速度を決定するのに使えます。角速度 $\omega$ も考慮すると、各ホイールの速度は次のように定まります：
@@ -276,9 +274,9 @@ $$
 P(t) =
 \begin{bmatrix} t^3 & t^2 & t & 1 \end{bmatrix}
 \begin{bmatrix}
-2P_0 & -2P_1 & 1P_2 & 1P_3 \
--3P_0 & 3P_1 & -2P_2 & -1P_3 \
-0 & 0 & 1P_1 & 0 \
+2P_0 & -2P_1 & 1P_2 & 1P_3 \\
+-3P_0 & 3P_1 & -2P_2 & -1P_3 \\
+0 & 0 & 1P_1 & 0 \\
 1P_0 & 0 & 0 & 0
 \end{bmatrix}
 $$

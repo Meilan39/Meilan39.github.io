@@ -539,9 +539,25 @@ v_{rr} &amp;= l_x * \cos(45)\ \  + l_y * \sin(45)\ \  - \omega
 
     <div id="footer" class="page__footer">
       <footer>
-        <!-- start custom footer snippets -->
+        <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']], // Tells MathJax to look for $...$ and \(...\)
+    displayMath: [['$$','$$'], ['\\[','\\]']], // Standard display math
+    processEscapes: true, // Allows for escaping special characters
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // Important to avoid conflicts
+  },
+  TeX: {
+    equationNumbers: { autoNumber: "AMS" } // Optional: For AMS style equation numbering
+  }
+});
+</script>
 
-<!-- end custom footer snippets -->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<link rel="stylesheet" href="/assets/css/custom.css">
         <div class="page__footer-follow">
   <ul class="social-icons">
     

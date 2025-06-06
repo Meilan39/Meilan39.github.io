@@ -16,7 +16,7 @@ mathjax: true
 
 2023年VEX世界大会に出場したロボットがこのプログラムで計画した経路を自律制御で実行する様子。
 
-[実際に使用されている様子](https://drive.google.com/file/d/109tNWCAwsQDnNOmf9EIANeVorjwlhJYq/view?usp=sharing)
+[実際に使用されている動画](https://drive.google.com/file/d/109tNWCAwsQDnNOmf9EIANeVorjwlhJYq/view?usp=sharing)
 
 開始点・終了点および速度を可視化できる通常のPath Plannerバージョン。
 

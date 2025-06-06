@@ -7,12 +7,16 @@ mathjax: true
 
 このプロジェクトでは、差動駆動およびホロノミック [Vex](https://www.vexrobotics.com/) ロボットの滑らかな経路生成における [Cubic Hermite Spline](https://en.wikipedia.org/wiki/Cubic_Hermite_spline) の応用について詳述します。経路生成は [Desmos](https://www.desmos.com/) の使用により簡略化されています。また、本プロジェクトでは、初速度と最終速度、初期加速度と最終加速度、移動距離を与えたときの速度プロファイルを生成する簡単な方法も提案しています。これは高校最終学年の間に取り組んだプロジェクトであり、多くの改善の余地が残されていますが、その一部を本記事で紹介します。
 
-研究機関：2022年8月ー2023年6月
+研究期間：2022年8月ー2023年6月
 
 # リンク
 
 [GitHubリポジトリ](https://github.com/Meilan39/Vex-Library-Public)  
 [プレゼンテーション](https://drive.google.com/file/d/1s2wVjT6lOR31UDFTtDkMZKHKzBM_V8rS/view)
+
+2023年VEX世界大会に出場したロボットがこのプログラムで計画した経路を自律制御で実行する様子。
+
+[実際に使用されている様子](https://drive.google.com/file/d/109tNWCAwsQDnNOmf9EIANeVorjwlhJYq/view?usp=sharing)
 
 開始点・終了点および速度を可視化できる通常のPath Plannerバージョン。
 
@@ -22,10 +26,6 @@ mathjax: true
 
 [Path Planner Plus](https://www.desmos.com/calculator/dg7kybaxyb)
 
-2023年VEX世界大会に出場したロボットがこのプログラムで計画した経路を実行する様子。
-
-[実際に使用されている様子](https://drive.google.com/file/d/109tNWCAwsQDnNOmf9EIANeVorjwlhJYq/view?usp=sharing)
-
 # 使用ツール
 
 - C++
@@ -33,7 +33,7 @@ mathjax: true
 
 # 動機
 
-VEX Robotics Competitionでは、「自律制御期間」と呼ばれる時間帯があり、ロボットは事前にプログラムされたルーチンを実行して得点します。多くのチームは、エンコーダ距離や時間ベースのアプローチを用いて、個別の直線経路を連続で実行しています。しかし、この方法では、目的地と現在地の間に障害物がある場合、複数の経路を順に実行する必要があり、非効率で大きな誤差が生じる可能性があります。このプロジェクトの動機は、2点間の連続的かつ柔軟な経路を簡単に生成できるインターフェースを作成することでした。
+VEX Robotics Competitionでは、「自律制御時間」と呼ばれる時間帯があり、ロボットは事前にプログラムされたルーチンを実行して得点します。多くのチームは、エンコーダ距離や時間ベースのアプローチを用いて、個別の直線経路を連続で実行しています。しかし、この方法では、目的地と現在地の間に障害物がある場合、複数の経路を順に実行する必要があり、非効率で大きな誤差が生じる可能性があります。このプロジェクトの動機は、2点間の連続的かつ柔軟な経路を簡単に生成できるインターフェースを作成することでした。
 
 # 背景
 

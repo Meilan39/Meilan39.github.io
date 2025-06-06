@@ -1,5 +1,5 @@
 ---
-title: "文化遺産の保存と共有のための３次元復元（英語版）- 共同研究"
+title: "３次元復元のためのカメラキャリブレーションと動画処理（英語版）"
 date: 2025-05-28
 categories: projects
 ---
@@ -8,7 +8,7 @@ Some would say that we are currently living through the information age, a unive
 
 To support an advancement of the information medium, a simple and accessible method to convert seamlessly between objects in the real world and those in the virtual world becomes of dire demand. 3D reconstruction is a field of computer vision that involves the “reconstruction” of 3D objects from 2D pictures. Examples of uses for 3D reconstruction include, generating 3D models of museum artifacts to share with the world, or increasing the reliability and efficiency of self-driving cars by generating models of the environment with greater accuracy.
 
-研究機関：2024年4月ー2024年7月
+研究期間：2024年4月ー2024年7月
 
 # 2. Camera Calibration
 ## 2.1. Motivation 

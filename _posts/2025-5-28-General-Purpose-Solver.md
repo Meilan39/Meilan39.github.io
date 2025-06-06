@@ -9,4 +9,4 @@ mathjax: true
 
 [GitHub リポジトリ](https://github.com/Meilan39/General-Purpose-Solver)
 
-研究機関：2025年4月~
+研究期間：2025年4月~

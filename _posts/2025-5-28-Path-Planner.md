@@ -384,7 +384,7 @@ $$
 
 ```c++
   void arcadeDrive( Vector translation, float w ) {
-      // 運転士視点操作の場合得られた横断ベクトルをロボットの角度の分、逆回転
+      // 操縦者視点操作の場合得られた横断ベクトルをロボットの角度の分、逆回転
       if (fieldCentric) translation.rotate( -pose.w );
       float fr = ( translation.y * FR_component.y) + ( translation.x * FR_component.x) - w;
       float fl = ( translation.y * FL_component.y) + ( translation.x * FL_component.x) + w;

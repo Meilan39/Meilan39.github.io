@@ -261,20 +261,29 @@ Phase II is much like Phase I, but because it is a maximization operation, the i
 
 
 Translating this tableau back into equation form gives the following:
-$$x_1 = 4.286 - 0.714s_1 - 0.714s_3$$
-$$s_2 = 9.517 - 1.429s_1 - 2.429s_3$$
-$$x_2 = 1.000 + 1.000s_3$$
-$$Z = 28.71 - 4.286s_1 - 1.286s_3$$
+
+$$
+x_1 = 4.286 - 0.714s_1 - 0.714s_3 \\
+s_2 = 9.517 - 1.429s_1 - 2.429s_3 \\
+x_2 = 1.000 + 1.000s_3 \\
+Z = 28.71 - 4.286s_1 - 1.286s_3
+$$
 
 Setting $s_1 = s_3 = 0$ yields the solution to the LP problem:
-$x_1 = 4.286$
-$x_2 = 1$
-$s_2 = 9.517$
-$Z = 28.71$
+
+$$
+x_1 = 4.286 \\
+s_2 = 9.517 \\
+x_2 = 1 \\
+Z = 28.71
+$$
 
 Minimization problems are solved by converting them to their dual. For instance:
+
 $$Minimize: Z = 6x_1 + 3x_2$$
+
 would become the following, where all terms are negated [1]:
+
 $$Maximize: -Z = -6x_1 - 3x_2$$
 
 ### 3.2. Implementation
@@ -607,6 +616,7 @@ $$f(a+t) \approx f(a) + f'(a)t + \frac{f''(a)}{2!}t^2$$
 Differentiating with respect to $t$ and solving gives the root. 
 
 $$\frac{df(a)}{dx} + \frac{d^2f(a)}{dx^2}t = 0$$
+
 $$t = -\frac{f'(a)}{f''(a)}$$
 
 Assuming that the second derivative of $f(x)$ at $x=a$ is positive, the $t$ derived above represents the minimum of the second-order Taylor approximation of $f(x)$, giving a relatively good step direction and length to minimize the original function. This process can be repeated iteratively, updating $a$ with $t$ at every step to incrementally encroach on a local minimum for any well-defined function. 
@@ -641,7 +651,7 @@ $$|\Delta f(x_k + \alpha_k p_k)^Tp_k| \le c_2 |\Delta f_k^T(x_k)p_k|$$
 
 The first condition, also called the sufficient decrease condition or the Armijo condition, defines regions where the decrease in the objective function is largest compared to the distance from the initial point. The second condition, also called the curvature condition, defines regions where the derivative of the function is less than the derivative at the initial point. 
 
-The regions meeting the first condition are shown shaded in purple on the left graph of Figure 7. The regions that satisfy the second conditions are shown shaded in red on the right graph of Figure 7. Figure 7 is a line search for the function $f(x,y)=sin(x)+cos(y)$ at (3,6) with search direction (1,-0.2). Running the line-search on these conditions yields an $\alpha$ value of 0.98, which can be seen to lie within both regions of the graph. [3][4]
+The regions meeting the first condition are shown shaded in purple on the left graph of Figure 7. The regions that satisfy the second conditions are shown shaded in red on the right graph of Figure 7. Figure 7 is a line search for the function $f(x,y)=\sin(x)+\cos(y)$ at (3,6) with search direction (1,-0.2). Running the line-search on these conditions yields an $\alpha$ value of 0.98, which can be seen to lie within both regions of the graph. [3][4]
 
 **Figure 7: Wolfe Condition 1 (left) and Wolfe Condition 2 (right)**
 <p align="center">
@@ -883,10 +893,11 @@ Constrained non-linear programming is the addition of non-linear constraints to 
                         | <nonlinear_expression>;
 ```
 
-The overarching strategy for CNLP problems is the penalty method, which works by minimizing the objective function with an added penalty term which grows larger when the constraints are not met. By gradually increasing the coefficient of this penalty term, a minimum that does not meet the condition becomes infeasible. For example, given an objective function $f(x)=sin(x)+0.01x^3$ and a penalty $x-1=0$ and $sin(x/2)=0$, the following functions can be graphed as shown in Figure 16.
+The overarching strategy for CNLP problems is the penalty method, which works by minimizing the objective function with an added penalty term which grows larger when the constraints are not met. By gradually increasing the coefficient of this penalty term, a minimum that does not meet the condition becomes infeasible. For example, given an objective function $f(x)=\sin(x)+0.01x^3$ and a penalty $x-1=0$ and $\sin(x/2)=0$, the following functions can be graphed as shown in Figure 16.
 
 $$f_1(x) = f(x) + a(x-1)^2$$
-$$f_2(x) = f(x) + a(sin(x/2))^2$$
+
+$$f_2(x) = f(x) + a(\sin(x/2))^2$$
 
 **Figure 16: increasing the penalty term for f1 (red) and f2 (green) coefficient from left to right**
 <p align="center">

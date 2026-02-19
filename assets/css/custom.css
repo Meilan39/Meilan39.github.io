@@ -1,3 +1,14 @@
+/* Center tables within blog posts */
+.page__content table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Center figure/table/program captions (bold-only paragraphs) */
+.page__content p:has(> strong:only-child) {
+  text-align: center;
+}
+
 .img-large-centered {
   display: block;
   margin-left: auto;

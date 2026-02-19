@@ -3,6 +3,7 @@ title: "汎用数値最適化ソルバー"
 date: 2025-02-19
 categories: projects
 mathjax: true
+classes: wide
 ---
 
 As technology continues to advance, things that humans could only dream of accomplishing a mere decade ago are now being achieved at breakneck speeds. However, being able to do 'anything' introduces new problems starting with sustainability. For example, the past decade has seen much push for greater efficiency in resource management, tackling environmental problems such as climate change. In an age where anything is possible, optimizing our approach to create a better future becomes a point of interest. 
@@ -41,7 +42,7 @@ Syntax Analysis is a general term used to describe a procedural parsing of text 
 | `?` | The previous element must be repeated 0 or 1 times | `{0, 1}` |
 
 
-The high-level structure for a LP problem file is given in Program 1. The variable `<lp>` is defined as an `<objective>`, followed by a `<linear_expression>`, a semicolon, the `Constrain` keyword, and any number of `<linear_constraint>`s. This can be understood more clearly when shown in reference to Program 2, where an example LP problem file is shown. The `Minimize` in Program 2 represents the `<objective>` in the BNF, the $4x6x1+3x2''$ represents the `<linear_expression>` object for the expression $6x_1+3x_2$, and so on. 
+The high-level structure for a LP problem file is given in Program 1. The variable `<lp>` is defined as an `<objective>`, followed by a `<linear_expression>`, a semicolon, the `Constrain` keyword, and any number of `<linear_constraint>`s. This can be understood more clearly when shown in reference to Program 2, where an example LP problem file is shown. The `Minimize` in Program 2 represents the `<objective>` in the BNF, `6x1 + 3x2` represents the `<linear_expression>` for the expression $6x_1+3x_2$, and so on. 
 
 **Program 1: High-level structure for a LP problem file**
 ```text
@@ -193,7 +194,7 @@ Constraints: \qquad\qquad\qquad\qquad\qquad\qquad\\
     x_2 \ge 1
 $$
 
-Where the variables are assumed to all be positive, i.e. $x_1, x_2, x_3 \ge 0$. The inequality conditions are turned into equality conditions by adding slack variables like so:
+Where the variables are assumed to all be positive, i.e. $x_1, x_2 \ge 0$. The inequality conditions are turned into equality conditions by adding slack variables like so:
 
 $$
 Maximize: \qquad\qquad\qquad\qquad\qquad\qquad\\
@@ -392,6 +393,7 @@ int Tableau::get_pivot(std::pair<int, int> &piv, int obj_row) {
 
 Program 18 shows the implementation of the `Tableau` constructor. The first portion of code scans through the AST to determine the dimensions of the matrix. In the second portion of code, each element of the AST is read again, populating the Phase II row when the objective function is read, and populating the appropriate constraint row if a constraint is read. Care is taken to ensure that duplicate variables, or variables on the wrong side of the inequality are also correctly accounted for in the tableau.
 
+**Program 18: Tableau constructor implementation**
 ```cpp
 Tableau::Tableau(Node* head, Variables* variables) {
     Node* mode = head->next[0];
@@ -516,7 +518,7 @@ Tableau::Tableau(Node* head, Variables* variables) {
 
 The motivation of Integer Linear Programming is that variables which model real-world values tend to have integer restrictions. For example, there is no point in knowing that exporting 4.231 apples and 2.124 oranges is the most profitable. Furthermore, when these values are restricted to integers, the optimal export may become 3 apples and 3 oranges, which is an arbitrary result that cannot be inferred simply by looking at the decimal optimum. 
 
-Restricting the search to integers is relatively simple with a functioning simplex engine. Specifically, this implementation will use a simple branch and bound method, by adding constraints onto the existing AST and recursively pruning the search space. The search is started by first running the simplex method on the inputted AST. If the integer variables are found to be integers after the first iteration, the search is over. If one or more of the integer bounded variables are decimal values, the most 'non-integer', or $x_{max} = max(|x_i - \lfloor x_i + 0.5\rfloor|)$ where $x_i(i=1,2,...n)$ represents the solution to the i'th variable, is chosen. The chosen variable, say $x_j$, becomes the branching point for two searches: one with the added constraint $x_j \le \lfloor x_{max}\rfloor$, and another with the constraint $x_j \ge \lceil x_{max}\rceil$. This process is recursively repeated until all of the integer bounded variables become integers, or the maximum recursive depth is reached. Additionally, because the solution to the Simplex algorithm at each step represents the absolute optimum for the given constraints, branches with a function value below a known solution that meet the integer bounds may be pruned.
+Restricting the search to integers is relatively simple with a functioning simplex engine. Specifically, this implementation will use a simple branch and bound method, by adding constraints onto the existing AST and recursively pruning the search space. The search is started by first running the simplex method on the inputted AST. If the integer variables are found to be integers after the first iteration, the search is over. If one or more of the integer bounded variables are decimal values, the most 'non-integer', or $x_{max} = max(\lvert x_i - \lfloor x_i + 0.5\rfloor \rvert)$ where $x_i(i=1,2,...n)$ represents the solution to the i'th variable, is chosen. The chosen variable, say $x_j$, becomes the branching point for two searches: one with the added constraint $x_j \le \lfloor x_{max}\rfloor$, and another with the constraint $x_j \ge \lceil x_{max}\rceil$. This process is recursively repeated until all of the integer bounded variables become integers, or the maximum recursive depth is reached. Additionally, because the solution to the Simplex algorithm at each step represents the absolute optimum for the given constraints, branches with a function value below a known solution that meet the integer bounds may be pruned.
 
 ### 4.2. Implementation
 Program 19 shows the implementation of the `bnb` function, which is the starting point for the branch and bound algorithm. The AST is parsed for the index of the "Integer" delimiter and which variables are integer bound. The "branch" calls the branch and bound, and the solution is printed to a solution file of the same name as the input file.
@@ -639,7 +641,7 @@ $$|\Delta f(x_k + \alpha_k p_k)^Tp_k| \le c_2 |\Delta f_k^T(x_k)p_k|$$
 
 The first condition, also called the sufficient decrease condition or the Armijo condition, defines regions where the decrease in the objective function is largest compared to the distance from the initial point. The second condition, also called the curvature condition, defines regions where the derivative of the function is less than the derivative at the initial point. 
 
-The regions meeting the first condition are shown shaded in purple on the top graph of Figure 7. The regions that satisfy the second conditions are shown shaded in red on the buttom graph of Figure 7. Figure 7 is a line search for the function $f(x,y)=sin(x)+cos(y)$ at (3,6) with search direction (1,-0.2). Running the line-search on these conditions yields an $\alpha$ value of 0.98, which can be seen to lie within both regions of the graph. [3][4]
+The regions meeting the first condition are shown shaded in purple on the left graph of Figure 7. The regions that satisfy the second conditions are shown shaded in red on the right graph of Figure 7. Figure 7 is a line search for the function $f(x,y)=sin(x)+cos(y)$ at (3,6) with search direction (1,-0.2). Running the line-search on these conditions yields an $\alpha$ value of 0.98, which can be seen to lie within both regions of the graph. [3][4]
 
 **Figure 7: Wolfe Condition 1 (left) and Wolfe Condition 2 (right)**
 <p align="center">
@@ -886,7 +888,7 @@ The overarching strategy for CNLP problems is the penalty method, which works by
 $$f_1(x) = f(x) + a(x-1)^2$$
 $$f_2(x) = f(x) + a(sin(x/2))^2$$
 
-**Figure 16: increasing the penalty term for f1 (red) and f2 (green) coefficient from top to buttom**
+**Figure 16: increasing the penalty term for f1 (red) and f2 (green) coefficient from left to right**
 <p align="center">
   <img src="/assets/2025-5-28-General-Purpose-Solver/penalty-1.svg" width="32%">
   <img src="/assets/2025-5-28-General-Purpose-Solver/penalty-2.svg" width="32%">

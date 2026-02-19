@@ -1,6 +1,6 @@
 ---
 title: "汎用数値最適化ソルバー"
-date: 2025-05-28
+date: 2025-02-19
 categories: projects
 mathjax: true
 ---
@@ -52,11 +52,11 @@ The high-level structure for a LP problem file is given in Program 1. The variab
 **Program 2: An example LP problem file**
 ```text
 Minimize
-6x1 + 3x2;
+    6x1 + 3x2;
 Constrain
-1.4x1 + x2 >= 7;
--2x1 + x2 <= 2;
-x2 <= 5.5;
+    1.4x1 + x2 >= 7;
+    -2x1 + x2 <= 2;
+    x2 <= 5.5;
 ```
 
 Variables like the `<lp>` shown in Program 1 are defined using other lower-level variables such as `<objective>`, which are defined elsewhere in a similar manner. Ultimately, variables of a BNF are broken down into indivisible units, which will be referred to as 'words' in this report. Program 3 shows the definition of `<comparison>`, which can be any of the listed comparative operators. Each operator is an indivisible unit, or 'word', with a specific meaning that would be lost if broken down further.
@@ -177,41 +177,45 @@ t:  return node;
 }
 ```
 
----
-
 ## 3. Linear Programming
 
 ### 3.1. Overview
-Simply stated, linear programming is the problem of optimizing a linear objective function subject to a set of linear constraints. While systems of linear equalities can be solved directly using linear algebra, linear programming requires a different approach because the feasible region defined by inequalities is typically a convex polyhedron, and the solution can lie anywhere along its boundary. The simplex method is an iterative algorithm that can optimize LP problems by operating on a simplex "tableau" representation of the problem. This tableau resembles and is operated on as if it were a matrix. 
+Simply stated, linear programming is the problem of optimizing a linear objective function subject to a set of linear constraints. While systems of linear equalities can be solved directly using linear algebra, linear programming requires a different approach because the feasible region defined by inequalities is typically a convex polyhedron, and the solution can lie anywhere along its boundary. The simplex method is an iterative algorithm that can optimize LP problems by operating on a simplex "tableau" representation of the problem. This tableau resembles and is operated on as if it were a matrix [1]. 
 
 A two-phase simplex method is considered in this particular implementation, making it capable of handling inequality constraints in addition to equality constraints. Given a maximization problem in the following form:
 
-Maximize: 
-$$Z = 6x_1 + 3x_2$$
-Constraints:
-$$1.4x_1 + x_2 \le 7$$
-$$-2x_1 + x_2 \le 2$$
-$$x_2 \ge 1$$
+$$
+Maximize: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    Z = 6x_1 + 3x_2 \\
+Constraints: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    1.4x_1 + x_2 \le 7 \\
+    -2x_1 + x_2 \le 2 \\
+    x_2 \ge 1
+$$
 
 Where the variables are assumed to all be positive, i.e. $x_1, x_2, x_3 \ge 0$. The inequality conditions are turned into equality conditions by adding slack variables like so:
 
-Maximize: 
-$$Z = 6x_1 + 3x_2$$
-Constraints:
-$$1.4x_1 + x_2 + s_1 = 7$$
-$$-2x_1 + x_2 + s_2 = 2$$
-$$x_2 - s_3 = 1$$
+$$
+Maximize: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    Z = 6x_1 + 3x_2 \\
+Constraints: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    1.4x_1 + x_2 + s_1 = 7 \\
+    -2x_1 + x_2 + s_2 = 2 \\
+    x_2 - s_3 = 1 \\
+$$
 
 Where $s_1, s_2, s_3 \ge 0$ are slack variables. Since slack variables are added for $\le$ conditions and subtracted for $\ge$ conditions, they take up the "slack" to satisfy the equality. Additionally, artificial variables $y_i$ are added where slack variables are negative, and a new minimization problem for $y_1$ is tacked onto the current problem.
 
-Minimize: 
-$$y_1$$
-Maximize: 
-$$Z = 6x_1 + 3x_2$$
-Constraints:
-$$1.4x_1 + x_2 + s_1 = 7$$
-$$-2x_1 + x_2 + s_2 = 2$$
-$$x_2 - s_3 + y_1 = 1$$
+$$
+Minimize: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    y_1 \\
+Maximize: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    Z = 6x_1 + 3x_2 \\
+Constraints: \qquad\qquad\qquad\qquad\qquad\qquad\\
+    1.4x_1 + x_2 + s_1 = 7 \\
+    -2x_1 + x_2 + s_2 = 2 \\
+    x_2 - s_3 + y_1 = 1 \\
+$$
 
 The newly added minimization problem is called the Phase I operation, and the Phase II operation is the original maximization problem. The problem is then translated into the following table format resembling an augmented coefficient matrix, but with two additional rows labeled "Phase I" and "Phase II". The Phase II row is populated by simply negating the coefficients of the objective function. The Phase I row is defined to be the sum of all of the rows with an artificial variable.
 
@@ -268,9 +272,9 @@ $s_2 = 9.517$
 $Z = 28.71$
 
 Minimization problems are solved by converting them to their dual. For instance:
-Minimize: $Z = 6x_1 + 3x_2$
-would become the following, where all terms are negated:
-Maximize: $-Z = -6x_1 - 3x_2$
+$$Minimize: Z = 6x_1 + 3x_2$$
+would become the following, where all terms are negated [1]:
+$$Maximize: -Z = -6x_1 - 3x_2$$
 
 ### 3.2. Implementation
 Program 14 shows the implementation of the `simplex` function, which is called by the Main function for LP problems. In the first two lines, an object of the `Tableau` class is instantiated using the AST and solved using the `solve` method. The solution vector is then pulled from the tableau and printed to a ".sol" file with the same name as the input file.
@@ -388,11 +392,128 @@ int Tableau::get_pivot(std::pair<int, int> &piv, int obj_row) {
 
 Program 18 shows the implementation of the `Tableau` constructor. The first portion of code scans through the AST to determine the dimensions of the matrix. In the second portion of code, each element of the AST is read again, populating the Phase II row when the objective function is read, and populating the appropriate constraint row if a constraint is read. Care is taken to ensure that duplicate variables, or variables on the wrong side of the inequality are also correctly accounted for in the tableau.
 
----
+```cpp
+Tableau::Tableau(Node* head, Variables* variables) {
+    Node* mode = head->next[0];
+    if(mode->next[0]->type == lt_minimize) this->minimize = true;
+    if(mode->next[0]->type == lt_maximize) this->minimize = false;
+    /* determine matrix size */
+    this->defined = variables->len;
+    this->row = 0;
+    this->slack = 0;
+    this->artificial = 0;
+    for(int i = 0; i < mode->length; i++) {
+        if(mode->next[i]->type != nt_linear_constraint) continue;
+        if(mode->next[i]->next[1]->type == lt_less || 
+           mode->next[i]->next[1]->type == lt_leq) {
+            this->slack++;
+        }
+        if(mode->next[i]->next[1]->type == lt_equal) {
+            this->artificial++;
+        }
+        if(mode->next[i]->next[1]->type == lt_greater || 
+           mode->next[i]->next[1]->type == lt_geq) {
+            this->slack++;
+            this->artificial++;
+        }
+        this->row++;
+    }
+    this->row += 2; // ... phase II + phase I
+    this->column = this->defined + this->slack + this->artificial + 1; // ... b
+    /* size matrix */
+    this->mat = std::vector<std::vector<double>>
+                (this->row, std::vector<double>(this->column, 0.0));
+    /* define objective and constraint row */
+    int phase_two = this->row - 2; // objective function row
+    int phase_one = this->row - 1;
+    int con_row = 0;
+    int countSlack = 0, countArtificial = 0;
+    bool negative;
+    /* populate matrix */
+    for(int i = 0; i < mode->length; i++) {
+        Node* element = mode->next[i];
+        /* populate objective function row */
+        if(element->type == nt_linear_additive) {
+            Node* additive = element;
+            /* for each linear multiplication */
+            for(int j = 0; j < additive->length; j++) {
+                Node* multiplicative = additive->next[j];
+                Node *coefficient = nullptr, *variable = nullptr;
+                negative = multiplicative->subtype == 2;
+                for(int k = 0; k < multiplicative->length; k++) {
+                    if(multiplicative->next[k]->type == nt_real)
+                        coefficient = multiplicative->next[k];
+                    if(multiplicative->next[k]->type == lt_variable)
+                        variable = multiplicative->next[k];
+                }
+
+                /* populate matrix */
+                if(variable) {
+                    double value = coefficient ? n_get_value(coefficient) : 1;
+                    if(negative ^ !this->minimize) value = -value;
+                    this->mat[phase_two][(int)n_get_value(variable)] += value;
+                } else {
+                    double value = n_get_value(coefficient);
+                    if(negative ^ !this->minimize) value = -value;
+                    this->mat[phase_two][this->column - 1] += value;
+                }
+            }
+        }
+        /* populate constraint rows */
+        if(element->type == nt_linear_constraint) {
+            bool negate = false; 
+            bool less, isSlack, isArtificial;
+            for(int l = 0; l < element->length; l++) {
+                Node* additive = element->next[l];
+                /* inequality and sign flipping */
+                if(additive->type != nt_linear_additive) {
+                    negate = true;
+                    less = additive->type == lt_less || additive->type == lt_leq;
+                    isSlack = additive->type != lt_equal;
+                    isArtificial = !less;
+                    continue;
+                }
+                /* for each linear multiplication */
+                for(int j = 0; j < additive->length; j++) {
+                    Node* multiplicative = additive->next[j];
+                    Node *coefficient = nullptr, *variable = nullptr;
+                    negative = multiplicative->subtype == 2;
+                    for(int k = 0; k < multiplicative->length; k++) {
+                        if(multiplicative->next[k]->type == nt_real)
+                            coefficient = multiplicative->next[k];
+                        if(multiplicative->next[k]->type == lt_variable)
+                            variable = multiplicative->next[k];
+                    }
+                    /* populate matrix */
+                    if(variable) {
+                        double value = coefficient ? n_get_value(coefficient) : 1;
+                        if(negative ^ negate) value = -value;
+                        this->mat[con_row][(int)n_get_value(variable)] += value;
+                    } else {
+                        double value = n_get_value(coefficient);
+                        if(negative ^ !negate) value = -value; // constants are !negate
+                        this->mat[con_row][this->column - 1] += value;
+                    }
+                }
+            }
+            /* slack variable */
+            if(isSlack) 
+                this->mat[con_row][this->defined + (countSlack++)] = less ? 1 : -1;
+            if(isArtificial) {
+                for(int j = 0; j < this->column; j++)
+                    this->mat[phase_one][j] += this->mat[con_row][j];
+                this->mat[con_row][this->defined + this->slack + (countArtificial++)] = 1;
+            }
+            con_row++; // next constraint row
+        }
+    }
+}
+```
 
 ## 4. Integer Linear Programming
 
 ### 4.1. Overview
+
 The motivation of Integer Linear Programming is that variables which model real-world values tend to have integer restrictions. For example, there is no point in knowing that exporting 4.231 apples and 2.124 oranges is the most profitable. Furthermore, when these values are restricted to integers, the optimal export may become 3 apples and 3 oranges, which is an arbitrary result that cannot be inferred simply by looking at the decimal optimum. 
 
 Restricting the search to integers is relatively simple with a functioning simplex engine. Specifically, this implementation will use a simple branch and bound method, by adding constraints onto the existing AST and recursively pruning the search space. The search is started by first running the simplex method on the inputted AST. If the integer variables are found to be integers after the first iteration, the search is over. If one or more of the integer bounded variables are decimal values, the most 'non-integer', or $x_{max} = max(|x_i - \lfloor x_i + 0.5\rfloor|)$ where $x_i(i=1,2,...n)$ represents the solution to the i'th variable, is chosen. The chosen variable, say $x_j$, becomes the branching point for two searches: one with the added constraint $x_j \le \lfloor x_{max}\rfloor$, and another with the constraint $x_j \ge \lceil x_{max}\rceil$. This process is recursively repeated until all of the integer bounded variables become integers, or the maximum recursive depth is reached. Additionally, because the solution to the Simplex algorithm at each step represents the absolute optimum for the given constraints, branches with a function value below a known solution that meet the integer bounds may be pruned.
@@ -403,6 +524,7 @@ Program 19 shows the implementation of the `bnb` function, which is the starting
 **Program 19: bnb function implementation**
 ```cpp
 void bnb::bnb(Node* head, Variables variables, const char* path) {
+    ...
     for(int i = 0; i < mode->length; i++) {
         if(mode->next[i]->type == lt_integer) insidx = i;
         if(mode->next[i]->type == nt_variable_constraint) {
@@ -410,6 +532,7 @@ void bnb::bnb(Node* head, Variables variables, const char* path) {
         }
     }
     bnb::branch(head, variables, general, optimal, 0);
+    ...
 }
 ```
 
@@ -478,17 +601,20 @@ Although the particular implementation discussed in this report will force a bou
 This has been a topic of interest for the math field for centuries, and efficient iterative methods to "search" for local minima have been devised. One of the aforementioned search algorithms is the ubiquitous Newton method, which leverages the fact that a given function $f(x)$ has the following second order Taylor approximation around $x=a$:
 
 $$f(a+t) \approx f(a) + f'(a)t + \frac{f''(a)}{2!}t^2$$
+
+Differentiating with respect to $t$ and solving gives the root. 
+
 $$\frac{df(a)}{dx} + \frac{d^2f(a)}{dx^2}t = 0$$
 $$t = -\frac{f'(a)}{f''(a)}$$
 
-
-Differentiating with respect to $t$ and solving gives the root. Assuming that the second derivative of $f(x)$ at $x=a$ is positive, the $t$ derived above represents the minimum of the second-order Taylor approximation of $f(x)$, giving a relatively good step direction and length to minimize the original function. This process can be repeated iteratively, updating $a$ with $t$ at every step to incrementally encroach on a local minimum for any well-defined function. 
-
-![Figure 6: Newton Method in 2-dimensions](/assets/2025-5-28-General-Purpose-Solver/newton.svg)
+Assuming that the second derivative of $f(x)$ at $x=a$ is positive, the $t$ derived above represents the minimum of the second-order Taylor approximation of $f(x)$, giving a relatively good step direction and length to minimize the original function. This process can be repeated iteratively, updating $a$ with $t$ at every step to incrementally encroach on a local minimum for any well-defined function. 
 
 For example, Figure 6 shows the Newton method in 2-dimensions, where $f(x)=x^4-3x^2+2x$ is represented by the red graph, and its second-order Taylor approximation at $x=-1.2$ is represented by the black graph. The blue dots represent $a$ at every step, which are given by the minimum of the previous approximation, and ultimately approach the local minima at approximately $x=-0.43$.
 
-The Newton method can be extended into N-dimensions by replacing the first derivative with a gradient matrix, and the second derivative with a Hessian matrix.
+**Figure 6: Newton Method in 2-dimensions**
+![Figure 6: Newton Method in 2-dimensions](/assets/2025-5-28-General-Purpose-Solver/newton.svg)
+
+The Newton method can be extended into N-dimensions by replacing the first derivative with a gradient matrix, and the second derivative with a Hessian matrix [2].
 
 $$t = -H^{-1}(x)\Delta f(x)$$
 
@@ -515,18 +641,17 @@ $$|\Delta f(x_k + \alpha_k p_k)^Tp_k| \le c_2 |\Delta f_k^T(x_k)p_k|$$
 
 The first condition, also called the sufficient decrease condition or the Armijo condition, defines regions where the decrease in the objective function is largest compared to the distance from the initial point. The second condition, also called the curvature condition, defines regions where the derivative of the function is less than the derivative at the initial point. 
 
+The regions meeting the first condition are shown shaded in purple on the top graph of Figure 7. The regions that satisfy the second conditions are shown shaded in red on the buttom graph of Figure 7. Figure 7 is a line search for the function $f(x,y)=sin(x)+cos(y)$ at (3,6) with search direction (1,-0.2). Running the line-search on these conditions yields an $\alpha$ value of 0.98, which can be seen to lie within both regions of the graph. [3][4]
+
 **Figure 7: Wolfe Condition 1 (left) and Wolfe Condition 2 (right)**
 <p align="center">
-  <img src="/assets/2025-5-28-General-Purpose-Solver/wolfe-1.svg" width="49%">
-  <img src="/assets/2025-5-28-General-Purpose-Solver/wolfe-2.svg" width="49%">
+  <img src="/assets/2025-5-28-General-Purpose-Solver/wolfe-1.svg" width="48%">
+  <img src="/assets/2025-5-28-General-Purpose-Solver/wolfe-2.svg" width="48%">
 </p>
 
+The implementations shown in programs 21 and 22, use the algorithm featured in "Numerical Optimization"[3].
 
-The regions meeting the first condition are shown shaded in purple on the top graph of Figure 7. The regions that satisfy the second conditions are shown shaded in red on the buttom graph of Figure 7. Figure 7 is a line search for the function $f(x,y)=sin(x)+cos(y)$ at (3,6) with search direction (1,-0.2). Running the line-search on these conditions yields an $\alpha$ value of 0.98, which can be seen to lie within both regions of the graph.
-
-The implementation will use the algorithm featured in the book "Numerical Optimization".
-
-**Program 21: Line Search Algorithm**
+**Program 21: Line Search Algorithm [3]**
 ```text
 Algorithm 3.5 (Line Search Algorithm).
 Set α0 = 0, choose αmax > 0 and α1 ∈ (0, αmax);
@@ -545,7 +670,7 @@ repeat
 end (repeat)
 ```
 
-**Program 22: Zoom Algorithm**
+**Program 22: Zoom Algorithm [3]**
 ```text
 Algorithm 3.6 (zoom).
 repeat
@@ -599,6 +724,7 @@ UNLP problems are processed first by the `gd` function shown in Program 24. Much
 **Program 24: gd function implementation**
 ```cpp
 void gd::gd(Node* head, Variables variables, const std::string &path) {
+    ...
     minima = gd::solve(head, variables);
     /* no solution */
     if(minima.empty()) {
@@ -610,6 +736,7 @@ void gd::gd(Node* head, Variables variables, const std::string &path) {
         if(gd::maximize) return std::get<1>(a) > std::get<1>(b);
         else return std::get<1>(a) < std::get<1>(b);
     });
+    ...
 }
 ```
 
@@ -696,7 +823,7 @@ int gd::BFGS(Node* F, Variables variables, Point &point, std::vector<Bound> &bou
 }
 ```
 
-Program 27 shows the gradient function, which uses the `evaluate` function to calculate a centered finite-difference. Here, `h` is defined to be the cube root of the machine epsilon for double precision, which gives optimal precision for centered finite-difference methods.
+Program 27 shows the gradient function, which uses the `evaluate` function to calculate a centered finite-difference. Here, `h` is defined to be the cube root of the machine epsilon for double precision, which gives optimal precision for centered finite-difference methods [5].
 
 **Program 27: gradient function implementation**
 ```cpp
@@ -740,8 +867,6 @@ int gd::additive(Node* head, const Matrix &replace, double &value) {
 E:  return -1;
 }
 ```
-
----
 
 ## 6. Constrained Non-linear Programming
 
@@ -788,6 +913,7 @@ The Augmented Lagrangian method will be implemented in the same file as the grad
 **Program 40: al function implementation**
 ```cpp
 void gd::al(Node* head, Variables variables, const std::string& path) {
+    ...
     for(int i = 0; i < mode->length; i++) {
         if(mode->next[i]->type == lt_constrain) {
             constraint = true;
@@ -822,6 +948,7 @@ void gd::al(Node* head, Variables variables, const std::string& path) {
         gd::r *= 2;
         depth++;
     }
+    ...
 }
 ```
 

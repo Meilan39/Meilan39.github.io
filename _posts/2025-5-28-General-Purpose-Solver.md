@@ -618,26 +618,24 @@ The Newton method can be extended into N-dimensions by replacing the first deriv
 
 $$t = -H^{-1}(x)\Delta f(x)$$
 
+Where the final update function is given by the following:
 
-Where the final update function is given by equation (1):
 $$x_{n+1} = x_n - H^{-1}(x_n)\Delta f(x_n)$$
 
+Because Hessian calculation can be costly for high dimensional problems, Quasi-Newton methods such as BFGS gradually refined an approximation of the Hessian using finite-differences of the gradient at each step. The updated equation is given as follows, where $s_k$ represents the step direction scaled by the step size, and $y_k$ is the difference of the gradient at the current iteration and the previous iteration.
 
-Because Hessian calculation can be costly for high dimensional problems, Quasi-Newton methods such as BFGS gradually refined an approximation of the Hessian using finite-differences of the gradient at each step. The updated equation is given in equation (2), where $s_k$ represents the step direction scaled by the step size, and $y_k$ is the difference of the gradient at the current iteration and the previous iteration.
-
-$$H_{k+1} = H_k + \frac{(s_k^Ty_k + y_k^TH_ky_k)(s_ks_k^T)}{(s_k^Ty_k)^2} - \frac{H_ky_ks_k^T + s_ky_k^TH_k}{s_k^Ty_k}$$
-
+$$H_{k+1} = H_k + \frac{(s_k^Ty_k + y_k^TH_ky_k)(s_ks_k^T)}{(s_k^Ty_k)^2} 
+                - \frac{H_ky_ks_k^T + s_ky_k^TH_k}{s_k^Ty_k}$$
 
 This Hessian approximation relies on $s_k^Ty_k$ being positive, which occurs when the objective function is strongly convex at $x_k$, but does not necessarily hold true otherwise. In this implementation, the strong Wolfe condition will be applied to the line-search algorithm, ensuring positive curvature at all points excluding the initial starting point. Failure to ensure positive curvature at the initial point will not cause a critical failure in terms of convergence but could potentially ill-condition the Hessian leading to an erratic first several iterations. Here, the initialization shown in equation (3) will be used to precondition the Hessian appropriately.
 
 $$H_0 = \frac{y_k^Ts_k}{y_k^Ty_k}$$
 
-
 To impose the strong Wolfe condition on the line search, a line search is conducted on the step direction vector derived by the negative product of the gradient and Hessian. Regardless of the dimensions of the problem, a line search becomes a 1-dimensional search for a scalar $\alpha$ such that the new iterate $x_{k+1} = x_k - \alpha H^{-1}(x_n)\Delta f(x_n)$ satisfies the strong Wolfe conditions shown below.
 
 $$f(x_k + \alpha_k p_k) \le f(x_k) + c_1 \alpha_k \Delta f_k^T(x_k)p_k$$
-$$|\Delta f(x_k + \alpha_k p_k)^Tp_k| \le c_2 |\Delta f_k^T(x_k)p_k|$$
 
+$$|\Delta f(x_k + \alpha_k p_k)^Tp_k| \le c_2 |\Delta f_k^T(x_k)p_k|$$
 
 The first condition, also called the sufficient decrease condition or the Armijo condition, defines regions where the decrease in the objective function is largest compared to the distance from the initial point. The second condition, also called the curvature condition, defines regions where the derivative of the function is less than the derivative at the initial point. 
 

@@ -2,6 +2,7 @@
 title: "３次元復元のためのカメラキャリブレーションと動画処理（英語版）"
 date: 2025-05-28
 categories: projects
+classes: wide
 ---
 
 Some would say that we are currently living through the information age, a universal turning point for civilization which has the potential to rival the agricultural and industrial revolution in terms of societal impact. One important aspect of the information age is that it has enabled the sharing of information with far less work and with far more accessibility than in the past. The invention of the internet and its advancement as a global exchange for information has undoubtedly raised the bar for the collective intelligence of mankind. Increasing the amount of information that can be stored and transferred has been a field of constant research in the past decades, but there comes a point where the medium of information exchange must be updated to allow for further growth. Recent advancements in fields such as VR (Virtual Reality) have begun to foreshadow the next stage of the information revolution, beginning with a new medium to share information with a level of immersion that can hardly be imagined today. 

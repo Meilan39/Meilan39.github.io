@@ -3,6 +3,7 @@ title: "差動駆動およびホロノミックロボット向け経路計画イ
 date: 2025-05-28
 categories: projects
 mathjax: true
+classes: wide
 ---
 
 このプロジェクトでは、差動駆動およびホロノミック [Vex](https://www.vexrobotics.com/) ロボットの滑らかな経路生成における [Cubic Hermite Spline](https://en.wikipedia.org/wiki/Cubic_Hermite_spline) の応用について詳述します。経路生成は [Desmos](https://www.desmos.com/) の使用により簡略化されています。また、本プロジェクトでは、初速度と最終速度、初期加速度と最終加速度、移動距離を与えたときの速度プロファイルを生成する簡単な方法も提案しています。これは高校最終学年の間に取り組んだプロジェクトであり、多くの改善の余地が残されていますが、その一部を本記事で紹介します。
